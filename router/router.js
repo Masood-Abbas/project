@@ -2,6 +2,12 @@ const express=require(`express`)
 const Register=require(`../models/register`)
 
 const router=express.Router()
+// router.post("/",async(req,res)=>{
+//     const newUser=new Register(req.body)
+//    const result=await newUser.save()
+//    res.send(result)
+//    console.log(result);
+// })
 
 router.post("/login",async(req,res)=>{
    try {
