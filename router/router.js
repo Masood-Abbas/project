@@ -17,14 +17,12 @@ try {
     const token = await newUser.generateAuthToken();
     const data = { token };
     res.send(data);
-    // const token=await user.generateAuthToken()
-    // console.log(`the success part`+token);
 } catch (error) {
   res.status(404).send(`invalid details`) 
   console.log(error)
 }
 })
-
+// for check the above api
 // router.post("/login",async(req,res)=>{
 //     try {
 //      const email=req.body.email
