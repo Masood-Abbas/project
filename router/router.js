@@ -14,11 +14,14 @@ try {
         category:req.body.category
     })
     const result=await newUser.save()
-   
+    const token = await newUser.generateAuthToken();
+    const data = { token };
+    res.send(data);
     // const token=await user.generateAuthToken()
     // console.log(`the success part`+token);
 } catch (error) {
   res.status(404).send(`invalid details`) 
+  console.log(error)
 }
 })
 
