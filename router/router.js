@@ -22,18 +22,7 @@ try {
 }
 })
 
-// router.post("/login",async(req,res)=>{
-//     try {
-//      const email=req.body.email
-//     //  const password=req.body.password
-//      const usera=await user.findOne({email})
-//      res.send(usera)
-//     }
-//     catch (error) {
-//         res.status(404).send(`invalid login`)
-//         console.log(error)
-//     }
-// })
+
 
 // router.post("/",async(req,res)=>{
 //     const newUser=new Register(req.body)
