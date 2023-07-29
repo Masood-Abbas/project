@@ -1,7 +1,8 @@
 const express=require(`express`)
 const Register=require(`../models/register`)
-
+const Permission =require('../models/permission')
 const router=express.Router()
+const permissionRouter = require('./permission');
 
 router.post("/login",async(req,res)=>{
    try {
@@ -25,5 +26,8 @@ router.post("/login",async(req,res)=>{
 }
 })
 
+
+
+router.use('/permissions', permissionRouter);
 
 module.exports=router;
