@@ -1,8 +1,8 @@
 const express=require(`express`)
 const Register=require(`../models/register`)
-const user=require(`../models/user`)
-
+const Permission =require('../models/permission')
 const router=express.Router()
+const permissionRouter = require('./permission');
 
 router.post("/login",async(req,res)=>{
    try {
