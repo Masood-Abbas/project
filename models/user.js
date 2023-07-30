@@ -5,10 +5,6 @@ const jwt=require("jsonwebtoken")
 const userschema= new mongoose.Schema({
     employee_no:{
         type:Number,
-        unique:true
-    },
-    password:{
-        type:String,
         required:true,
         unique:true
     },
@@ -24,7 +20,7 @@ const userschema= new mongoose.Schema({
     },
     employe_type:{
         type:String,
-        required:true,
+     
     },
     category:{
         type:String,
@@ -49,5 +45,15 @@ userschema.methods.generateAuthToken=async function(){
         console.log(e);
     }
 }
+
+// hashing password
+userschema.pre(`save`,async function(next){
+    if (this.isModified(`password`)) {
+      this.password=await bcrypt.hash(this.password,10);
+      this.Confirm_Password=await bcrypt.hash(this.password,10);
+    }
+    next()
+})
+
 const user=new mongoose.model(`user`,userschema)
 module.exports=user
