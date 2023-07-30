@@ -54,11 +54,11 @@ router.post("/login",async(req,res)=>{
 })
 // update user
 
-router.patch(`/registration/:employe_no`,async(req,res)=>{
+router.patch(`/registration`,async(req,res)=>{
   
 
 try {
-  const employe_no=req.params.employe_no
+  const employe_no=req.body.employe_no
   const updateUser=await user.findOneAndUpdate({employe_no},req.body,{
     new:true
   })
