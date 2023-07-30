@@ -4,6 +4,8 @@ const user=require(`../models/user`)
 const bcrypt=require(`bcrypt`)
 
 const router=express.Router()
+
+// Register user
 router.post("/registration",async(req,res)=>{
 try {
       const newUser=new user({
@@ -24,7 +26,7 @@ try {
   console.log(error)
 }
 })
-
+// Login user
 router.post("/login",async(req,res)=>{
     try {
      const email=req.body.email
@@ -50,6 +52,25 @@ router.post("/login",async(req,res)=>{
         console.log(error)
     }
 })
+// update user
+router.patch(`/registration/:id`,async(req,res)=>{
+  
+
+try {
+  const _id=req.params.id
+  const updateUser=await user.findOneAndUpdate({_id},req.body,{
+    new:true
+  })
+  if(!updateUser){
+    res.status(404).send('User not found');
+  }
+  res.send(updateUser)
+} catch (error) {
+  res.status(500).send(`invalid`)
+  console.log(error)
+}
+})
+
 
 // router.post("/",async(req,res)=>{
 //     const newUser=new Register(req.body)
@@ -58,6 +79,7 @@ router.post("/login",async(req,res)=>{
 //    console.log(result);
 // })
 
+//Admin login 
 router.post("/login",async(req,res)=>{
    try {
     const username=req.body.username
