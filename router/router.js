@@ -48,17 +48,18 @@ router.post("/login",async(req,res)=>{
   }
 }
     catch (error) {
-        res.status(404).send(`invalid login`)
+        res.status(404).send(`invali login`)
         console.log(error)
     }
 })
 // update user
-router.patch(`/registration/:id`,async(req,res)=>{
+
+router.patch(`/registration/:employe_no`,async(req,res)=>{
   
 
 try {
-  const _id=req.params.id
-  const updateUser=await user.findOneAndUpdate({_id},req.body,{
+  const employe_no=req.params.employe_no
+  const updateUser=await user.findOneAndUpdate({employe_no},req.body,{
     new:true
   })
   if(!updateUser){
