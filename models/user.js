@@ -28,6 +28,10 @@ const userschema= new mongoose.Schema({
     password:{
         type:String,
         },
+    profile_img:{
+        type:String,
+        default: '/default-profile-img.png'
+        },
     tokens:[{
         token:{
            type:String,
