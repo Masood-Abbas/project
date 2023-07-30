@@ -1,38 +1,37 @@
 const mongoose=require(`mongoose`)
 const jwt=require("jsonwebtoken")
+const bcrypt=require(`bcrypt`)
+
 
 const userschema= new mongoose.Schema({
     employe_no:{
         type:Number,
-        required:true,
         unique:true
     },
     first_name:{
         type:String,
-        required:true
-    },
+        },
     last_name:{
         type:String,
-        required:true
-    },
+        },
     email:{
         type:String,
-        required:true,
         unique:true
     },
     employe_type:{
         type:String,
-        required:true,
+     
     },
     category:{
         type:String,
-        required:true
-    },
+        },
+    password:{
+        type:String,
+        },
     tokens:[{
         token:{
-            type:String,
-            required:true,
-        }
+           type:String,
+      }
     }]
 })
 userschema.methods.generateAuthToken=async function(){
@@ -42,10 +41,19 @@ userschema.methods.generateAuthToken=async function(){
         // await this.save()
         return token;
     } catch (e) {
-        // res.send(`error`+e)
+  
         console.log(e);
     }
 }
-const user=new mongoose.model(`user`,userschema)
 
+// hashing password
+userschema.pre(`save`,async function(next){
+    if (this.isModified(`password`)) {
+      this.password=await bcrypt.hash(this.password,10);
+      this.Confirm_Password=await bcrypt.hash(this.password,10);
+    }
+    next()
+})
+
+const user=new mongoose.model(`user`,userschema)
 module.exports=user
