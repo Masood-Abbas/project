@@ -15,7 +15,8 @@ try {
         email:req.body.email,
         employe_type:req.body.employe_type,
         category:req.body.category,
-        password:req.body.password
+        password:req.body.password,
+        profile_img:req.body.profile_img
     })
     const result=await newUser.save()
     const token = await newUser.generateAuthToken();
