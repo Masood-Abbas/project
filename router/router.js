@@ -2,25 +2,53 @@ const express=require(`express`)
 const Register=require(`../models/register`)
 const user=require(`../models/user`)
 const bcrypt=require(`bcrypt`)
+const nodemailer = require('nodemailer');
 
 const router=express.Router()
 
 // Register user
 router.post("/registration",async(req,res)=>{
 try {
+    const {employe_no,first_name,last_name,email,employe_type,category,password,profile_img}=req.body
       const newUser=new user({
-        employe_no:req.body.employe_no,
-        first_name:req.body.first_name,
-        last_name:req.body.last_name,
-        email:req.body.email,
-        employe_type:req.body.employe_type,
-        category:req.body.category,
-        password:req.body.password,
-        profile_img:req.body.profile_img
+        employe_no,first_name,last_name,email,employe_type,category,password,profile_img
     })
     const result=await newUser.save()
     const token = await newUser.generateAuthToken();
     const data = { token };
+    // Email
+     // Create a Nodemailer transporter using SMTP
+     const transporter=nodemailer.createTransport({
+      service:"gmail",
+      auth:{
+        user:"a86094305@gmail.com",
+        pass:"ebuppjsrpobpfadt"
+      }
+    })
+    // Email options
+    const mailOptions={
+      from:"a86094305@gmail.com",
+      to: email,
+      subject:"information",
+      text:`Employe_No: ${employe_no}
+            First Name: ${first_name}
+            Last Name: ${last_name}
+            Email: ${email}
+            Employe-type: ${employe_type}
+            Catgory: ${category}
+            password: ${password}
+            Profile_img: ${profile_img}`
+    }
+    // send email
+    transporter.sendMail(mailOptions,(error,info)=>{
+      if (error) {
+        return res.status(500).send(`error occure sending mail`)
+      } else {
+        console.log('Email sent: ' + info.response);
+         res.status(201).send(`Email send successly` )
+      }
+    })
+
     res.send(data);
 } catch (error) {
   res.status(404).send(`invalid details`) 

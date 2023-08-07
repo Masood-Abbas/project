@@ -6,7 +6,7 @@ const bcrypt=require(`bcrypt`)
 const userschema= new mongoose.Schema({
     employe_no:{
         type:Number,
-        unique:true
+        // unique:true
     },
     first_name:{
         type:String,
@@ -16,7 +16,7 @@ const userschema= new mongoose.Schema({
         },
     email:{
         type:String,
-        unique:true
+        // unique:true
     },
     employe_type:{
         type:String,
