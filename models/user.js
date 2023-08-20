@@ -4,21 +4,21 @@ const bcrypt=require(`bcrypt`)
 
 
 const userschema= new mongoose.Schema({
-    employe_no:{
+    employeeNo:{
         type:Number,
         // unique:true
     },
-    first_name:{
+    firstName:{
         type:String,
         },
-    last_name:{
+    lastLame:{
         type:String,
         },
     email:{
         type:String,
         // unique:true
     },
-    employe_type:{
+    employeeType:{
         type:String,
      
     },
@@ -28,7 +28,7 @@ const userschema= new mongoose.Schema({
     password:{
         type:String,
         },
-    profile_img:{
+    profileImg:{
         type:String,
         default: '/default-profile-img.png'
         },
