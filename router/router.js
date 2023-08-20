@@ -3,13 +3,14 @@ const Register=require(`../models/register`)
 const User=require('../models/user')
 const Permission =require('../models/permission')
 const router=express.Router()
-const permissionRouter = require('./permission');
+const permissionRoute = require('./permission');
 const nodemailer = require('nodemailer');
+
 
 
 router.get('/users', async (req, res) => {
     try {
-      const users = await User?.find({}, 'first_name last_name category email employee_no status id');
+      const users = await User?.find({}, 'first_name last_name category email employee_no employe_type id');
     
       if (users?.length) {
         res.json(users);
@@ -42,8 +43,6 @@ router.post("/login",async(req,res)=>{
 })
 
 
-
-
 router.post('/register', async (req, res) => {
     try {
       const {
@@ -51,10 +50,12 @@ router.post('/register', async (req, res) => {
         first_name,
         last_name,
         email,
-        status,
+        employe_type,
         category,
         password
       } = req.body;
+
+      console.log(req.body)
 
       const existingUserEmployeeNo = await User.findOne({
         $or: [{ employee_no }]
@@ -76,38 +77,20 @@ router.post('/register', async (req, res) => {
         first_name,
         last_name,
         email,
-        status,
+        employe_type,
         category,
         password
       });
 
-      const testAccount= await nodemailer?.createTestAccount()
-
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        auth: {
-            user: 'chelsie.stehr44@ethereal.email',
-            pass: 'crN5qHdnkAVbVxZZpx'
-        }
-    });
-  
-      const token = await newUser.generateAuthToken();
+     
       await newUser.save();
-      const info = await transporter.sendMail({
-        from: 'FypProject@gmail.com', // sender address
-        to: email, 
-        subject: "Create New Account", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>", // html body
-      });  
-      console.log(info)
-      res.status(201).json({ newUser, token });
+      res.status(200).json({ message:'User created successfully.' });
     } catch (error) {
       res.status(400).json({ message:  error.message });
     }
   });
   
+router.use('/permission', permissionRoute);
 
 
 module.exports=router;
