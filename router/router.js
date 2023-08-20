@@ -36,7 +36,7 @@ try {
             First Name: ${firstName}
             Last Name: ${lastName}
             Email: ${email}
-            Employe-type: ${employeType}
+            Employe-type: ${employeeType}
             Catgory: ${category}
             password: ${password}
             Profile_img: ${profileImg}`
@@ -89,8 +89,8 @@ router.patch(`/registration`,async(req,res)=>{
   
 
 try {
-  const employe_no=req.body.employeNo
-  const updateUser=await user.findOneAndUpdate({employeNo},req.body,{
+  const employeeNo=req.body.employeeNo
+  const updateUser=await user.findOneAndUpdate({employeeNo},req.body,{
     new:true
   })
   if(!updateUser){
