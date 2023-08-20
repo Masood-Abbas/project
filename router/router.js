@@ -11,9 +11,9 @@ const nodemailer = require('nodemailer');
 // Register user
 router.post("/registration",async(req,res)=>{
 try {
-    const {employe_no,first_name,last_name,email,employe_type,category,password,profile_img}=req.body
+    const {employeeNo,firstName,lastName,email,employeeType,category,password,profileImg}=req.body
       const newUser=new user({
-        employe_no,first_name,last_name,email,employe_type,category,password,profile_img
+        employeeNo,firstName,lastName,email,employeeType,category,password,profileImg
     })
     const result=await newUser.save()
     const token = await newUser.generateAuthToken();
@@ -32,14 +32,14 @@ try {
       from:"a86094305@gmail.com",
       to: email,
       subject:"information",
-      text:`Employe_No: ${employe_no}
-            First Name: ${first_name}
-            Last Name: ${last_name}
+      text:`Employe No: ${employeeNo}
+            First Name: ${firstName}
+            Last Name: ${lastName}
             Email: ${email}
-            Employe-type: ${employe_type}
+            Employe-type: ${employeType}
             Catgory: ${category}
             password: ${password}
-            Profile_img: ${profile_img}`
+            Profile_img: ${profileImg}`
     }
     // send email
     transporter.sendMail(mailOptions,(error,info)=>{
@@ -83,6 +83,26 @@ router.post("/login",async(req,res)=>{
         console.log(error)
     }
 })
+// update user
+
+router.patch(`/registration`,async(req,res)=>{
+  
+
+try {
+  const employe_no=req.body.employeNo
+  const updateUser=await user.findOneAndUpdate({employeNo},req.body,{
+    new:true
+  })
+  if(!updateUser){
+    res.status(404).send('User not found');
+  }
+  res.send(updateUser)
+} catch (error) {
+  res.status(500).send(`invalid`)
+  console.log(error)
+}
+})
+
 
 // router.post("/",async(req,res)=>{
 //     const newUser=new Register(req.body)

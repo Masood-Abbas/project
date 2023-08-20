@@ -4,29 +4,21 @@ const bcrypt=require(`bcrypt`)
 
 
 const userschema= new mongoose.Schema({
-    employe_no:{
+    employeeNo:{
         type:Number,
-<<<<<<< HEAD
         unique:true
-=======
-        // unique:true
->>>>>>> feature/update-api
     },
-    first_name:{
+    firstName:{
         type:String,
         },
-    last_name:{
+    lastName:{
         type:String,
         },
     email:{
         type:String,
-<<<<<<< HEAD
         unique:true
-=======
-        // unique:true
->>>>>>> feature/update-api
     },
-    employe_type:{
+    employeeType:{
         type:String,
      
     },
@@ -36,13 +28,10 @@ const userschema= new mongoose.Schema({
     password:{
         type:String,
         },
-<<<<<<< HEAD
-=======
-    profile_img:{
+    profileImg:{
         type:String,
         default: '/default-profile-img.png'
         },
->>>>>>> feature/update-api
     tokens:[{
         token:{
            type:String,
