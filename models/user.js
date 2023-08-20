@@ -6,7 +6,11 @@ const bcrypt=require(`bcrypt`)
 const userschema= new mongoose.Schema({
     employe_no:{
         type:Number,
+<<<<<<< HEAD
         unique:true
+=======
+        // unique:true
+>>>>>>> feature/update-api
     },
     first_name:{
         type:String,
@@ -16,7 +20,11 @@ const userschema= new mongoose.Schema({
         },
     email:{
         type:String,
+<<<<<<< HEAD
         unique:true
+=======
+        // unique:true
+>>>>>>> feature/update-api
     },
     employe_type:{
         type:String,
@@ -28,6 +36,13 @@ const userschema= new mongoose.Schema({
     password:{
         type:String,
         },
+<<<<<<< HEAD
+=======
+    profile_img:{
+        type:String,
+        default: '/default-profile-img.png'
+        },
+>>>>>>> feature/update-api
     tokens:[{
         token:{
            type:String,
