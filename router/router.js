@@ -2,9 +2,11 @@ const express=require(`express`)
 const Register=require(`../models/register`)
 const User=require('../models/user')
 const Permission =require('../models/permission')
+const Title = require('../models/title')
 const router=express.Router()
 const permissionRoute = require('./permission');
-const nodemailer = require('nodemailer');
+const titleRoute= require('./title/title')
+
 
 
 
@@ -91,6 +93,7 @@ router.post('/register', async (req, res) => {
   });
   
 router.use('/permission', permissionRoute);
+router.use('/titles',titleRoute)
 
 
 module.exports=router;
