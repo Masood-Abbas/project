@@ -26,10 +26,10 @@ const userschema= new mongoose.Schema({
         required:true,
         unique:true
     },
-    // employe_type:{
-    //     type:String,
-    //     required:true,
-    // },
+    employe_type:{
+        type:String,
+        // required:true,
+    },
     category:{
         type:String,
         required:true
