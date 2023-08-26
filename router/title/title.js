@@ -29,7 +29,7 @@ router.post('', async (req, res) => {
   
       await newTitle.save();
   
-      res.status(201).json(newTitle);
+      res.status(201).json({message:'Titles created successfully!'});
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
