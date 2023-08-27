@@ -1,29 +1,47 @@
 const express=require(`express`)
 const Register=require(`../models/register`)
-const User=require('../models/user')
-const Permission =require('../models/permission')
-const Title = require('../models/title')
+const user=require(`../models/user`)
+const bcrypt=require(`bcrypt`)
+
 const router=express.Router()
-const permissionRoute = require('./permission');
-const titleRoute= require('./title/title')
+router.post("/",async(req,res)=>{
+try {
+      const newUser=new user({
+        employe_no:req.body.employe_no,
+        first_name:req.body.first_name,
+        last_name:req.body.last_name,
+        email:req.body.email,
+        employe_type:req.body.employe_type,
+        category:req.body.category
+    })
+    const result=await newUser.save()
+   
+    // const token=await user.generateAuthToken()
+    // console.log(`the success part`+token);
+} catch (error) {
+  res.status(404).send(`invalid details`) 
+}
+})
 
+// router.post("/login",async(req,res)=>{
+//     try {
+//      const email=req.body.email
+//     //  const password=req.body.password
+//      const usera=await user.findOne({email})
+//      res.send(usera)
+//     }
+//     catch (error) {
+//         res.status(404).send(`invalid login`)
+//         console.log(error)
+//     }
+// })
 
-
-
-router.get('/users', async (req, res) => {
-    try {
-      const users = await User?.find({}, 'first_name last_name category email employee_no employe_type id');
-    
-      if (users?.length) {
-        res.json(users);
-      } else {
-        res.status(404).send('users not found');
-      }
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching users', error: error.message });
-    }
-  });
-
+// router.post("/",async(req,res)=>{
+//     const newUser=new Register(req.body)
+//    const result=await newUser.save()
+//    res.send(result)
+//    console.log(result);
+// })
 
 router.post("/login",async(req,res)=>{
    try {

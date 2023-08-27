@@ -5,7 +5,6 @@ const jwt=require("jsonwebtoken")
 const userschema= new mongoose.Schema({
     employee_no:{
         type:Number,
-        required:true,
         unique:true
     },
     password:{
@@ -15,30 +14,28 @@ const userschema= new mongoose.Schema({
     },
     first_name:{
         type:String,
-        required:true
-    },
+        },
     last_name:{
         type:String,
-        required:true
-    },
+        },
     email:{
         type:String,
-        required:true,
         unique:true
     },
     employe_type:{
         type:String,
-        // required:true,
+        required:true,
     },
     category:{
         type:String,
-        required:true
-    },
+        },
+    password:{
+        type:String,
+        },
     tokens:[{
         token:{
-            type:String,
-            required:true,
-        }
+           type:String,
+      }
     }]
 })
 userschema.methods.generateAuthToken=async function(){
@@ -48,11 +45,9 @@ userschema.methods.generateAuthToken=async function(){
         await this.save()
         return token;
     } catch (e) {
-        // res.send(`error`+e)
+  
         console.log(e);
     }
 }
-
 const user=new mongoose.model(`user`,userschema)
-
 module.exports=user
