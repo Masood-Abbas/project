@@ -2,8 +2,10 @@ const express=require(`express`)
 const Register=require(`../models/register`)
 const user=require(`../models/user`)
 const bcrypt=require(`bcrypt`)
-
+const permissionRoute=require('./permission')
 const router=express.Router()
+const titleRoute=require('./title/title')
+const roleRoute=require('./roles/roles')
 
 // Register user
 router.post("/registration",async(req,res)=>{
@@ -24,7 +26,6 @@ try {
     res.send(data);
 } catch (error) {
   res.status(404).send(`invalid details`) 
-  console.log(error)
 }
 })
 // Login user
@@ -41,7 +42,6 @@ router.post("/login",async(req,res)=>{
           const token = await usera.generateAuthToken();
           const data = { token };
           res.send(data);
-          console.log(usera);
         }else {
             res.status(404).send("invalid password")
      res.send(usera)
@@ -50,7 +50,6 @@ router.post("/login",async(req,res)=>{
 }
     catch (error) {
         res.status(404).send(`invali login`)
-        console.log(error)
     }
 })
 // update user
@@ -69,7 +68,6 @@ try {
   res.send(updateUser)
 } catch (error) {
   res.status(500).send(`invalid`)
-  console.log(error)
 }
 })
 
@@ -151,6 +149,7 @@ router.post('/register', async (req, res) => {
   
 router.use('/permission', permissionRoute);
 router.use('/titles',titleRoute)
+router.use('/roles',roleRoute)
 
 
 module.exports=router;
