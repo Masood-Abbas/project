@@ -1,17 +1,26 @@
+const express=require(`express`)
 const mongoose=require(`mongoose`)
 const jwt=require("jsonwebtoken")
 const bcrypt=require(`bcrypt`)
 
 
 const userschema= new mongoose.Schema({
+<<<<<<< HEAD
     employeeNo:{
+=======
+    employee_no:{
+>>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
         type:Number,
         unique:true
     },
     firstName:{
         type:String,
         },
+<<<<<<< HEAD
     lastName:{
+=======
+    last_name:{
+>>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
         type:String,
         },
     email:{
@@ -28,7 +37,11 @@ const userschema= new mongoose.Schema({
     password:{
         type:String,
         },
+<<<<<<< HEAD
     profileImg:{
+=======
+    profile_img:{
+>>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
         type:String,
         default: '/default-profile-img.png'
         },
@@ -42,7 +55,7 @@ userschema.methods.generateAuthToken=async function(){
     try {
         const token=jwt.sign({_id:this._id.toString()},`SECRET_KEY`)
         this.tokens=this.tokens.concat({token})
-        // await this.save()
+        await this.save()
         return token;
     } catch (e) {
   
@@ -60,4 +73,8 @@ userschema.pre(`save`,async function(next){
 })
 
 const user=new mongoose.model(`user`,userschema)
+<<<<<<< HEAD
 module.exports=user
+=======
+module.exports=user
+>>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
