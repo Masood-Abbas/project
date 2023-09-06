@@ -6,6 +6,7 @@ const permissionRoute=require('./permission')
 const router=express.Router()
 const titleRoute=require('./title/title')
 const roleRoute=require('./roles/roles')
+const instrumentRouter=require('./Instrument/Instrument')
 
 // Register user
 router.post("/registration",async(req,res)=>{
@@ -184,6 +185,7 @@ router.post('/register', async (req, res) => {
 router.use('/permission', permissionRoute);
 router.use('/titles',titleRoute)
 router.use('/roles',roleRoute)
+router.use(`/Instrument`,instrumentRouter)
 
 
 module.exports=router;

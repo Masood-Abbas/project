@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     }
   });
 
-router.post('', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
       const latestTitle = await Title.findOne().sort({ id: -1 });
       const newId = latestTitle ? latestTitle.id + 1 : 1;

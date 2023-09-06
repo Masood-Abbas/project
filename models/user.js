@@ -5,22 +5,14 @@ const bcrypt=require(`bcrypt`)
 
 
 const userschema= new mongoose.Schema({
-<<<<<<< HEAD
     employeeNo:{
-=======
-    employee_no:{
->>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
         type:Number,
         unique:true
     },
     firstName:{
         type:String,
         },
-<<<<<<< HEAD
     lastName:{
-=======
-    last_name:{
->>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
         type:String,
         },
     email:{
@@ -37,11 +29,7 @@ const userschema= new mongoose.Schema({
     password:{
         type:String,
         },
-<<<<<<< HEAD
     profileImg:{
-=======
-    profile_img:{
->>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
         type:String,
         default: '/default-profile-img.png'
         },
@@ -73,8 +61,4 @@ userschema.pre(`save`,async function(next){
 })
 
 const user=new mongoose.model(`user`,userschema)
-<<<<<<< HEAD
 module.exports=user
-=======
-module.exports=user
->>>>>>> c24bae46c9f989298d61ced21e1a46cde275968c
