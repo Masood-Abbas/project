@@ -4,7 +4,7 @@ const Role=require('../../models/roles')
 const router = express.Router();
 
 // Create a new item
-router.post('', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
 
     const latestRole = await Role.findOne().sort({ id: -1 });
