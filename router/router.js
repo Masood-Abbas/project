@@ -7,6 +7,7 @@ const router=express.Router()
 const titleRoute=require('./title/title')
 const roleRoute=require('./roles/roles')
 const instrumentRouter=require('./Instrument/Instrument')
+const nodemailer=require(`nodemailer`)
 
 // Register user
 router.post("/registration",async(req,res)=>{
@@ -61,6 +62,7 @@ try {
     res.send(data);
 } catch (error) {
   res.status(404).send(`invalid details`) 
+  console.log(error)
 }
 })
 // Login user
