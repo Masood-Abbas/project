@@ -42,7 +42,7 @@ try {
               First Name: ${firstName}
               Last Name: ${lastName}
               Email: ${email}
-              Employe-type: ${employeType}
+              Employe-type: ${employeeType}
               Catgory: ${category}
               password: ${password}
               Profile_img: ${profileImg}`
@@ -66,7 +66,9 @@ try {
 }
 })
 
-router.post("/",async(req,res)=>{
+// login to user
+
+router.post("/login",async(req,res)=>{
     try {
      const {email,password}=req.body
      const usera=await user.findOne({email})
@@ -113,7 +115,7 @@ try {
 
 router.get('/', async (req, res) => {
     try {
-      const users = await User?.find({}, 'firstName lastName category email employeeNo password id');
+      const users = await User?.find({}, 'firstName lastName category email employeeType employeeNo password id');
     
       if (users?.length) {
         res.json(users);
