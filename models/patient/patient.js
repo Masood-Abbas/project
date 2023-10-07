@@ -1,6 +1,9 @@
 const mongooes=require(`mongoose`)
 
 const patientSchema=new mongooes.Schema({
+    id:{
+        type:Number,
+    },
     firstName:{
         type:String,
     },
