@@ -185,7 +185,7 @@ router.post('/register', async (req, res) => {
 router.use('/permission', permissionRoute);
 router.use('/titles',titleRoute)
 router.use('/roles',roleRoute)
-router.use(`/Instrument`,instrumentRouter)
+router.use(`/instrument`,instrumentRouter)
 
 
 module.exports=router;
