@@ -13,7 +13,7 @@ const patientRouter=require(`./Patient/Patient`)
 router.use(`/user`,userRouter)
 router.use('/permission', permissionRoute);
 router.use('/titles',titleRoute)
-router.use('/roles',roleRoute)
+router.use('/role',roleRoute)
 router.use(`/Instrument`,instrumentRouter)
 router.use(`/patient`,patientRouter)
 
