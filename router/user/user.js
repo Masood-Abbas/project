@@ -66,7 +66,7 @@ router.post("/", async (req, res) => {
           res.status(201).send(`Email send successly`);
         }
       });
-      res.send(data);
+      res.send(result);
     }
   } catch (error) {
     if (error.code === 11000) {
