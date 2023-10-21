@@ -27,12 +27,6 @@ router.post("/", async (req, res) => {
     age,
     sex,
     urineTestData: [
-        {
-            name: " Color",
-            value: color,
-            unit: "",
-            normalValve: `yellow`,
-          },
       {
         name: " Glucose",
         value: glucose,
@@ -50,6 +44,12 @@ router.post("/", async (req, res) => {
         value: ketones,
         unit: " mg/dL",
         normalValve: ` Less than 10 mg/dL`,
+      },  
+      {
+        name: "Urobilinkogen",
+        value: urobilinkogen,
+        unit: "mg/dL",
+        normalValve:  `0.2 to 1.0  `,
       },
       {
         name: " Blood",
@@ -57,17 +57,11 @@ router.post("/", async (req, res) => {
         unit: " cells/HPF",
         normalValve:  `Negative (no blood should be present)`,
       },
-      {
-          name: "Urobilinkogen",
-          value: urobilinkogen,
-          unit: "mg/dL",
-          normalValve:  `0.2 to 1.0  `,
-        },
         {
-          name: "pH",
-          value: pH,
-          unit: " ",
-          normalValve:  ` 4.6 to 8.0 `,
+          name: " Color",
+          value: color,
+          unit: "",
+          normalValve: `yellow`,
         },
       {
         name: "Bilirubin",
