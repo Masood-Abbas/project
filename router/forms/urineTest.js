@@ -63,6 +63,12 @@ router.post("/", async (req, res) => {
           unit: "",
           normalValve: `yellow`,
         },
+           {
+          name: "pH",
+          value: pH,
+          unit: "",
+          normalValve:  ` 4.6 to 8.0 `,
+        },
       {
         name: "Bilirubin",
         value: bilirubin,
