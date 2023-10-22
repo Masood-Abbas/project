@@ -1,5 +1,5 @@
 const express=require(`express`)
-
+const auth=require(`../middleware/auth`)
 
 const router=express.Router()
 
@@ -15,10 +15,10 @@ const urineRouter=require(`./forms/urineTest`)
 const liverRouter=require(`./forms/liverTest`)
 
 router.use(`/user`,userRouter)
-router.use('/permission', permissionRoute);
-router.use('/titles',titleRoute)
-router.use('/role',roleRoute)
-router.use(`/Instrument`,instrumentRouter)
+router.use('/permission',auth, permissionRoute);
+router.use('/titles',auth,titleRoute)
+router.use('/role',auth,roleRoute)
+router.use(`/Instrument`,auth,instrumentRouter)
 router.use(`/patient`,patientRouter)
 // Form router
 router.use(`/bloodreport`,bloodRouter)
