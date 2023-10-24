@@ -43,6 +43,7 @@
         text-align: center;
       }
       footer {
+        {{!-- background-color: #337ab7; --}}
         color: black;
         padding: 10px;
         position: absolute;
@@ -54,6 +55,13 @@
       .signature {
         float: left;
       }
+       #signature-image {
+    max-height: 100px; 
+    max-width: 300px;
+    {{!-- border: 1px solid #333;  --}}
+    padding: 5px; 
+    margin-top: 10px; 
+  }
       .stamp {
         float: right;
       }
@@ -78,7 +86,7 @@
     <p><strong>Sex:</strong> {{sex}}</p>
 
     <!-- CBC Test Results Table -->
-    <h2>URINE EXAMINATION</h2>
+    <h2>Lipid Profile Test</h2>
     <table>
       <thead>
         <tr>
@@ -89,7 +97,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each urineTestData}}
+        {{#each lipidProfileTest}}
         <tr>
           <td>{{name}}</td>
           <td>{{value}}</td>
@@ -103,10 +111,10 @@
     <!-- Footer Section -->
     <footer>
       <div class="signature">
-       Signature : <img src="{{signature}}" alt="Laboratory signature" id="logo-image"/>
+        Patient's Signature: <img id="signature-image" src="{{signature}}" alt="Signature">
       </div>
       <div class="stamp">
-       Stamp: <img src="{{stamp}}" alt="Laboratory signature" id="logo-image"/>
+        Report Stamp: [Stamp Image]
       </div>
     </footer>
   </body>

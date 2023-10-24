@@ -12,7 +12,7 @@ const bodyParser = require("body-parser"); // Import body-parser
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post("/", async (req, res) => {
-  const { name, age, sex, glucose, protein, ketones, blood, pH ,color,bilirubin,urobilinkogen,nitrites} = req.body;
+  const { pdfName,name, age, sex, glucose, protein, ketones, blood, pH ,color,bilirubin,urobilinkogen,nitrites} = req.body;
 
   const date = new Date().toLocaleDateString("en-GB");
 
@@ -22,6 +22,7 @@ router.post("/", async (req, res) => {
 
   const testData = {
     logo: `data:image/png;base64,${logoBase64}`,
+    pdfName,
     name,
     date,
     age,
@@ -97,7 +98,7 @@ router.post("/", async (req, res) => {
     await page.waitForSelector(imageSelector);
 
 // pdf name
-    const pdfFileName=`${Date.now()}.pdf`
+    const pdfFileName = `${pdfName}.pdf`
 
     // generate pdf
     const pdfBuffer= await page.pdf({format:"A4",printBackground:true})

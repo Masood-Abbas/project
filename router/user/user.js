@@ -40,13 +40,13 @@ router.post("/",auth, async (req, res) => {
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "a86094305@gmail.com",
-          pass: "ebuppjsrpobpfadt",
+          user: process.env.EMAIL,
+          pass: process.env.PASS,
         },
       });
       // Email options
       const mailOptions = {
-        from: "a86094305@gmail.com",
+        from: process.env.EMAIL,
         to: email,
         subject: "information",
         text: `Employe No: ${employeeNo}
@@ -91,7 +91,7 @@ router.post("/login", async (req, res) => {
       if (isMatch) {
         const token = await usera.generateAuthToken();
         res.header(`x-auth-token`, token).send(usera);
-        res.send(usera);
+        res.status(201).send(usera);
       } else {
         res.status(404).send("invalid password");
       }
@@ -112,7 +112,7 @@ router.patch(`/`, auth, async (req, res) => {
     if (!updateUser) {
       return res.status(404).send("User not found");
     }
-    res.send(updateUser);
+    res.status(201).send(updateUser);
   } catch (error) {
     res.status(500).send(`Invalid`);
     console.log(error);
@@ -128,7 +128,7 @@ router.get("/",auth, async (req, res) => {
     );
 
     if (users?.length) {
-      res.json(users);
+      res.status(201).json(users);
     } else {
       res.status(404).send("users not found");
     }
@@ -138,5 +138,19 @@ router.get("/",auth, async (req, res) => {
       .json({ message: "Error fetching users", error: error.message });
   }
 });
+// Delete the user
+router.delete(`/:employeeNo`,async(req,res)=>{
+  try {
+    const employeeNo = req.params.employeeNo;;
+    const deleteUser=await user.deleteOne({employeeNo})
+    if(!employeeNo){
+        console.log(error)
+        return res.status(404).send(error) 
+    }
+    res.status(201).send(deleteUser)
+   } catch (error) {
+    res.status(500).send(error)
+   } 
+})
 
 module.exports = router;

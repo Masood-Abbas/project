@@ -15,6 +15,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post("/", async (req, res) => {
   const {
+    pdfName,
     name,
     age,
     sex,
@@ -37,12 +38,13 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   const date = new Date().toLocaleDateString("en-GB");
-  const logoPath = path.join(__dirname, "../../public/images/logo.png");
   // convert image in base64
+  const logoPath = path.join(__dirname, "../../public/images/logo.png");
   const logoBuffer= await readFileAsync(logoPath)
   const logoBase64= logoBuffer.toString("base64")
   const patientData = {
     logo:`data:image/png;base64,${logoBase64}`,
+    pdfName,
     name,
     date,
     age,
@@ -144,7 +146,7 @@ router.post("/", async (req, res) => {
 
     // Set the content of the page to the generated HTML
     await page.setContent(html);
-    const pdfFileName = `${Date.now().toLocaleString()}.pdf`;
+    const pdfFileName = `${pdfName}.pdf`
 
     // Generate a PDF from the page
     const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });

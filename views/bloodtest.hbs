@@ -8,7 +8,7 @@
       .lab-name h2 { margin: 0; } .logo img { max-height: 150px; max-width:
       150px; } table { width: 100%; border-collapse: collapse; } table, th, td {
       border: 1px solid black; } th, td { padding: 8px; text-align: center; }
-      footer { background-color: #337ab7; color: white; padding: 10px; position:
+      footer { color:black; padding: 10px; position:
       absolute; bottom: 0; width: 100%; display: flex; justify-content:
       space-between; } .signature { float: left; } .stamp { float: right; }
     </style>
@@ -56,11 +56,11 @@
 
     <!-- Footer Section -->
     <footer>
-      <div class="signature">
-        Patient's Signature: ____________________________
+      <div class="logo">
+       Signature: <img src="{{signature}}" alt="Laboratory signature" id="logo-image"/>
       </div>
-      <div class="stamp">
-        Report Stamp: [Stamp Image]
+      <div class="logo">
+       Stamp: <img src="{{stamp}}" alt="Laboratory signature" id="logo-image" />
       </div>
     </footer>
   </body>

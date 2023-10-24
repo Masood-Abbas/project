@@ -4,11 +4,10 @@ const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 const path = require(`path`);
 const fs = require("fs");
-const { promisify } = require("util");
+const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
-const bodyParser = require("body-parser"); // Import body-parser
+const bodyParser = require("body-parser"); 
 
-// Add body-parser middleware
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post("/", async (req, res) => {
@@ -17,97 +16,69 @@ router.post("/", async (req, res) => {
     name,
     age,
     sex,
-    bilirubinTotal,
-    bilirubinConjugated,
-    bilirubinUnconjugated,
-    sgpt,
-    sgot,
-    alkalinePhosphatase,
-    gammagt,
-    totalProtein,
-    albumine,
-    globulins,
+    fastingBloodSugar,
+    postprandialBloodSugar,
+    randomBloodSugar,
+    insulinLevel,
+    hba1c,
+    cholesterol,
   } = req.body;
 
   const date = new Date().toLocaleDateString("en-GB");
+  // logo image convert baase 64
   const logoPath = path.join(__dirname, "../../public/images/logo.png");
   const logoBuffer = await readFileAsync(logoPath);
-  const logoBase64 = logoBuffer.toString("base64");
-
+  const logoBase64 = logoBuffer.toString('base64');
 
   const patientData = {
     logo: `data:image/png;base64,${logoBase64}`,
-    name,
     pdfName,
+    name,
     date,
     age,
     sex,
-    liverTest: [
+    bloodGlucoseTest: [
       {
-        name: "Bilirubin Total",
-        value: bilirubinTotal,
-        unit: "mg/dL",
-        normalValve: `0.2-1.2`,
+        name: "Fasting Blood Sugar",
+        value: fastingBloodSugar,
+        unit: " mg/dL",
+        normalValve: `70-100 mg/dL`,
       },
       {
-        name: "Bilirubin Conjugated",
-        value: bilirubinConjugated,
-        unit: "mg/dL",
-        normalValve: `less than 0.5`,
+        name: "Postprandial Blood Sugar",
+        value: postprandialBloodSugar,
+        unit: " mg/dL",
+        normalValve: "70-140 mg/dL",
       },
       {
-        name: "Bilirubin Unconjugated",
-        value: bilirubinUnconjugated,
-        unit: "mg/dL",
-        normalValve: `0.1-1.0`,
+        name: "Random Blood Sugar",
+        value: randomBloodSugar,
+        unit: " mg/dL",
+        normalValve: "70-200 ",
       },
       {
-        name: "S.G.P.T (A.L.T)",
-        value: sgpt,
-        unit: "U/L",
-        normalValve: `5-55`,
+        name: "Cholesterol Level",
+        value: cholesterol,
+        unit: " mg/dL",
+        normalValve: "Less Than 200",
       },
       {
-        name: "S.G.O.T (A.S.T)",
-        value: sgot,
-        unit: "U/L",
-        normalValve: `5-34`,
+        name: "Insulin Level",
+        value: insulinLevel,
+        unit: " uU/mL ",
+        normalValve: "2-25",
       },
       {
-        name: "Alkaline Phosphatase",
-        value: alkalinePhosphatase,
-        unit: "U/L",
-        normalValve: `40-150`,
-      },
-      {
-        name: "Gamma G.T",
-        value: gammagt,
-        unit: "U/L",
-        normalValve: `16-64`,
-      },
-      {
-        name: "Total Protein",
-        value: totalProtein,
-        unit: "g/dL",
-        normalValve: `6.0-8.5`,
-      },
-      {
-        name: "Albumine",
-        value: albumine,
-        unit: "g/dL",
-        normalValve: `3.5-5.0`,
-      },
-      {
-        name: "Globulins",
-        value: globulins,
-        unit: "g/dL",
-        normalValve: `1.8-3.4`,
+        name: "HbA1c",
+        value: hba1c,
+        unit: "%",
+        normalValve: "Less Than 5.7",
       },
     ],
   };
 
   try {
-    const templatePath = path.join(__dirname, "../../views/liverTest.hbs");
+    const templatePath = path.join(__dirname, "../../views/bloodGlucoseTest.hbs");
     const template = fs.readFileSync(templatePath, "utf8");
 
     // Compile the Handlebars template
@@ -120,8 +91,9 @@ router.post("/", async (req, res) => {
 
     // Set the content of the page to the generated HTML
     await page.setContent(html);
-    const imageSelector = "#logo-image"; // Replace with your actual selector
+    const imageSelector = "#logo-image";
     await page.waitForSelector(imageSelector);
+    
     const pdfFileName = `${pdfName}.pdf`
 
     // Generate a PDF from the page
