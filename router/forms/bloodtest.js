@@ -4,6 +4,10 @@ const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 const path = require(`path`);
 const fs = require("fs");
+const { promisify } = require('util');
+const readFileAsync = promisify(fs.readFile);
+
+
 const bodyParser = require("body-parser"); // Import body-parser
 
 // Add body-parser middleware
@@ -11,6 +15,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post("/", async (req, res) => {
   const {
+    pdfName,
     name,
     age,
     sex,
@@ -33,10 +38,13 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   const date = new Date().toLocaleDateString("en-GB");
-  const logoPath = path.join(__dirname, "../../public/images/logo.jpg");
-  console.log(logoPath);
+  // convert image in base64
+  const logoPath = path.join(__dirname, "../../public/images/logo.png");
+  const logoBuffer= await readFileAsync(logoPath)
+  const logoBase64= logoBuffer.toString("base64")
   const patientData = {
-    logoPath,
+    logo:`data:image/png;base64,${logoBase64}`,
+    pdfName,
     name,
     date,
     age,
@@ -78,7 +86,7 @@ router.post("/", async (req, res) => {
         unit: "x10^9/L",
         normalValve: " 3.2 - 10.0 ",
       },
-    
+
       {
         name: "Trombosite Amount",
         value: trombositeAmount,
@@ -123,7 +131,6 @@ router.post("/", async (req, res) => {
     ],
   };
   try {
-
     const templatePath = path.join(__dirname, "../../views/bloodtest.hbs");
     const template = fs.readFileSync(templatePath, "utf8");
 
@@ -139,12 +146,11 @@ router.post("/", async (req, res) => {
 
     // Set the content of the page to the generated HTML
     await page.setContent(html);
-    const pdfFileName = `${Date.now().toLocaleString()}.pdf`;
+    const pdfFileName = `${pdfName}.pdf`
 
     // Generate a PDF from the page
     const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-    const pdfPath = path.join(__dirname, "../../public", pdfFileName);
-   
+    const pdfPath = path.join(__dirname, "../../public/pdf", pdfFileName);
 
     // Save the PDF to a file
     fs.writeFileSync(pdfPath, pdfBuffer);

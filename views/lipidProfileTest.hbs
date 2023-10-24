@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>Patient Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        margin-left: 3px;
+        margin-right: 3px;
+      }
+      header {
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .lab-name {
+        float: left;
+      }
+      .logo {
+        float: right;
+      }
+      .lab-name h2 {
+        margin: 0;
+      }
+      .logo img {
+        max-height: 150px;
+        max-width: 150px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: center;
+      }
+      footer {
+        {{!-- background-color: #337ab7; --}}
+        color: black;
+        padding: 10px;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+      .signature {
+        float: left;
+      }
+       #signature-image {
+    max-height: 100px; 
+    max-width: 300px;
+    {{!-- border: 1px solid #333;  --}}
+    padding: 5px; 
+    margin-top: 10px; 
+  }
+      .stamp {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header>
+      <div class="lab-name">
+        <h2>Digital Labortary</h2>
+      </div>
+      <div class="logo">
+        <img src="{{logo}}" alt="Laboratory Logo" id="logo-image" />
+      </div>
+    </header>
+
+    <!-- Body Section -->
+    <h1>Patient Report</h1>
+    <p><strong>Name:</strong> {{name}}</p>
+    <p><strong>Date:</strong> {{date}}</p>
+    <p><strong>Age:</strong> {{age}}</p>
+    <p><strong>Sex:</strong> {{sex}}</p>
+
+    <!-- CBC Test Results Table -->
+    <h2>Lipid Profile Test</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>EXAMINATION</th>
+          <th>RESULT</th>
+          <th>UNIT</th>
+          <th>NORMAL VALUE</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each lipidProfileTest}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{value}}</td>
+          <td>{{unit}}</td>
+          <td>{{normalValve}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <!-- Footer Section -->
+    <footer>
+      <div class="signature">
+        Patient's Signature: <img id="signature-image" src="{{signature}}" alt="Signature">
+      </div>
+      <div class="stamp">
+        Report Stamp: [Stamp Image]
+      </div>
+    </footer>
+  </body>
+</html>

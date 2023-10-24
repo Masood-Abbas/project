@@ -1,14 +1,15 @@
 const express = require(`express`);
-const Register = require(`../../models/register`);
 const user = require(`../../models/user`);
 const bcrypt = require(`bcrypt`);
 const User = require("../../models/user");
 const nodemailer = require("nodemailer");
+const auth=require(`../../middleware/auth`)
+
 
 const router = express.Router();
 
 // Register user
-router.post("/", async (req, res) => {
+router.post("/",auth, async (req, res) => {
   try {
     const {
       employeeNo,
@@ -39,13 +40,13 @@ router.post("/", async (req, res) => {
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "a86094305@gmail.com",
-          pass: "ebuppjsrpobpfadt",
+          user: process.env.EMAIL,
+          pass: process.env.PASS,
         },
       });
       // Email options
       const mailOptions = {
-        from: "a86094305@gmail.com",
+        from: process.env.EMAIL,
         to: email,
         subject: "information",
         text: `Employe No: ${employeeNo}
@@ -72,7 +73,7 @@ router.post("/", async (req, res) => {
     if (error.code === 11000) {
       return res.send("user are present");
     }
-    res.status(404).send(`plz entaer valid detail`);
+    res.status(500).send(`plz entaer valid detail`);
     console.log(error);
   }
 });
@@ -89,38 +90,37 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, usera.password);
       if (isMatch) {
         const token = await usera.generateAuthToken();
-        const data = { token };
-        res.send(usera);
-        console.log(usera);
+        res.header(`x-auth-token`, token).send(usera);
+        res.status(201).send(usera);
       } else {
         res.status(404).send("invalid password");
-        res.send(usera);
       }
     }
   } catch (error) {
-    res.status(404).send(`invalid login`);
+    res.status(500).send(`invalid login`);
     console.log(error);
   }
 });
 // update user
 
-router.patch(`/`, async (req, res) => {
+router.patch(`/`, auth, async (req, res) => {
   try {
     const employeeNo = req.body.employeeNo;
     const updateUser = await user.findOneAndUpdate({ employeeNo }, req.body, {
       new: true,
     });
     if (!updateUser) {
-      res.status(404).send("User not found");
+      return res.status(404).send("User not found");
     }
-    res.send(updateUser);
+    res.status(201).send(updateUser);
   } catch (error) {
-    res.status(500).send(`invalid`);
+    res.status(500).send(`Invalid`);
     console.log(error);
   }
 });
+
 // get all user
-router.get("/", async (req, res) => {
+router.get("/",auth, async (req, res) => {
   try {
     const users = await User?.find(
       {},
@@ -128,7 +128,7 @@ router.get("/", async (req, res) => {
     );
 
     if (users?.length) {
-      res.json(users);
+      res.status(201).json(users);
     } else {
       res.status(404).send("users not found");
     }
@@ -138,5 +138,19 @@ router.get("/", async (req, res) => {
       .json({ message: "Error fetching users", error: error.message });
   }
 });
+// Delete the user
+router.delete(`/:employeeNo`,async(req,res)=>{
+  try {
+    const employeeNo = req.params.employeeNo;;
+    const deleteUser=await user.deleteOne({employeeNo})
+    if(!employeeNo){
+        console.log(error)
+        return res.status(404).send(error) 
+    }
+    res.status(201).send(deleteUser)
+   } catch (error) {
+    res.status(500).send(error)
+   } 
+})
 
 module.exports = router;
