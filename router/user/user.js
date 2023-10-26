@@ -9,7 +9,7 @@ const auth=require(`../../middleware/auth`)
 const router = express.Router();
 
 // Register user
-router.post("/",auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const {
       employeeNo,
@@ -21,60 +21,70 @@ router.post("/",auth, async (req, res) => {
       password,
       profileImg,
     } = req.body;
+
     if (user.employeeNo === employeeNo) {
-      res.json({ msg: "employeeNo is present" });
-    } else {
-      const newUser = new user({
-        employeeNo,
-        firstName,
-        lastName,
-        email,
-        employeeType,
-        category,
-        password,
-        profileImg,
-      });
-      const result = await newUser.save();
-      // Email
-      // Create a Nodemailer transporter using SMTP
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.PASS,
-        },
-      });
-      // Email options
-      const mailOptions = {
-        from: process.env.EMAIL,
-        to: email,
-        subject: "information",
-        text: `Employe No: ${employeeNo}
-              First Name: ${firstName}
-              Last Name: ${lastName}
-              Email: ${email}
-              Employe-type: ${employeeType}
-              Catgory: ${category}
-              password: ${password}
-              Profile_img: ${profileImg}`,
-      };
-      // send email
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          return res.status(500).send(`error occure sending mail`);
-        } else {
-          console.log("Email sent: " + info.response);
-          res.status(201).send(`Email send successly`);
-        }
-      });
-      res.send(result);
+      return res.json({ msg: "employeeNo is present" });
     }
+
+    const newUser = new user({
+      employeeNo,
+      firstName,
+      lastName,
+      email,
+      employeeType,
+      category,
+      password,
+      profileImg,
+    });
+
+    const result = await newUser.save();
+
+    // generate token
+    const token = await newUser.generateAuthToken();
+    res.header(`x-auth-token`, token);
+    res.send(result)
+    // Email
+    // Create a Nodemailer transporter using SMTP
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASS,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "information",
+      text: `Employe No: ${employeeNo}
+            First Name: ${firstName}
+            Last Name: ${lastName}
+            Email: ${email}
+            Employe-type: ${employeeType}
+            Catgory: ${category}
+            password: ${password}
+            Profile_img: ${profileImg}`,
+    };
+
+    // send email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email: " + error);
+        res.status(500).send("Error occurred while sending email");
+      } else {
+        console.log("Email sent: " + info.response);
+        res.status(201).send("Email sent successfully");
+      }
+    });
   } catch (error) {
     if (error.code === 11000) {
-      return res.send("user are present");
+      res.status(400).send("User already exists");
+    } else {
+      console.error(error);
+      res.status(500).send("Please enter valid details");
     }
-    res.status(500).send(`plz entaer valid detail`);
-    console.log(error);
   }
 });
 
@@ -90,17 +100,18 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, usera.password);
       if (isMatch) {
         const token = await usera.generateAuthToken();
-        res.header(`x-auth-token`, token).send(usera);
-        res.status(201).send(usera);
+        res.setHeader("Authorization", `Bearer ${token}`)
       } else {
-        res.status(404).send("invalid password");
+        res.status(401).send("Invalid password");
       }
     }
+    res.status(201).send(`login successfully`)
   } catch (error) {
-    res.status(500).send(`invalid login`);
+    res.status(500).send("Invalid login");
     console.log(error);
   }
 });
+
 // update user
 
 router.patch(`/`, auth, async (req, res) => {
@@ -124,7 +135,7 @@ router.get("/",auth, async (req, res) => {
   try {
     const users = await User?.find(
       {},
-      "firstName lastName category email employeeType employeeNo password id"
+      "firstName lastName category email employeeType employeeNo password id token"
     );
 
     if (users?.length) {
@@ -152,5 +163,23 @@ router.delete(`/:employeeNo`,async(req,res)=>{
     res.status(500).send(error)
    } 
 })
+// logout
+router.get("/logout", auth, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).send("User not authenticated");
+    }
+    req.user.tokens = req.user.tokens.filter(
+      (token) => token.token !== req.token
+    );
+    const result = await req.user.save();
+    console.log(result);
+    res.setHeader('Authorization', '');
+    res.send("Successfully logged out");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 module.exports = router;

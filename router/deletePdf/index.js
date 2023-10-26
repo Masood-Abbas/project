@@ -3,7 +3,7 @@ const router = new express.Router();
 const path=require(`path`)
 const fs=require(`fs`)
 
-router.post('/', (req, res) => {
+router.delete('/', (req, res) => {
  try {
     let name = req.body.name; 
     pdfname= `${name}.pdf`

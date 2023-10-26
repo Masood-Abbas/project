@@ -6,9 +6,8 @@ const path = require(`path`);
 const fs = require("fs");
 const { promisify } = require("util");
 const readFileAsync = promisify(fs.readFile);
-const bodyParser = require("body-parser"); // Import body-parser
+const bodyParser = require("body-parser"); 
 
-// Add body-parser middleware
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post("/", async (req, res) => {
@@ -109,10 +108,7 @@ router.post("/", async (req, res) => {
     await browser.close()
     console.log("PDF generated successfully!");
 
-    // Set the 'Content-Type' header to 'application/pdf'
-    res.set("Content-Type", "application/pdf");
-    // Send the PDF as a download
-    res.download(pdfPath, pdfFileName);
+
 
   } catch (error) {
     console.error("Error generating PDF:", error);

@@ -4,6 +4,22 @@ const express = require('express');
 const Permission = require('../models/permission');
 
 const router = express.Router();
+router.post('/', async (req, res) => {
+  try {
+    const latestPermission = await Permission.findOne().sort({ id: -1 });
+    const newId = latestPermission ? latestPermission.id + 1 : 1;
+    const newPermission = new Permission({
+      name: req.body.name,
+      id: newId,
+    });
+   const result= await newPermission.save();
+   console.log(result);
+    res.json({message:'Permission created successful!'});
+  } catch (error) {
+    res.status(500).json({ error: 'Error creating item' })
+    console.log(error);
+  }
+});
 
 router.get('/', async (req, res) => {
   try {

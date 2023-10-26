@@ -1,21 +1,28 @@
 require("dotenv").config();
-const express = require(`express`);
 const jwt = require(`jsonwebtoken`);
-const cookieParser = require("cookie-parser");
+const User = require(`../models/user`);
 
-const app = express();
-app.use(cookieParser());
-app.use(express.json());
 const auth = async (req, res, next) => {
-    const token=req.headers[`x-auth-token`]
-    if(!token) return res.status(401).send(`not token`)
   try {
-    const decode=jwt.verify(token, process.env.SECRET_KEY);
-    req.user=decode
-    next()
-  } catch (err) {
-    console.log(err);
-    res.send(err);
+    const  authorizationHeader = req.headers["authorization"];
+    if (!authorizationHeader) {
+      return res.status(401).send("token can be provide");
+    }
+    const [bearer, token] = authorizationHeader.split(" ");
+
+    if (bearer !== "Bearer" || !token) {
+      return res.status(401).send("Invalid authorization header");
+    }
+    const decode = jwt.verify(token, process.env.SECRET_KEY);
+    const user = await User.findOne({ _id: decode._id });
+    req.user = user;
+    req.token = token;
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
   }
 };
+
 module.exports = auth;
+

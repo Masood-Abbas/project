@@ -98,10 +98,7 @@ router.post("/", async (req, res) => {
 
     console.log("PDF generated successfully!");
 
-    // Set the 'Content-Type' header to 'application/pdf'
-    res.set("Content-Type", "application/pdf");
-    // Send the PDF as a download
-    res.download(pdfPath, pdfFileName);
+
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).json({ error: "Error generating PDF" });

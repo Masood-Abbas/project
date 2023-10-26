@@ -1,64 +1,82 @@
 <html>
-  <head>
-    <title>Patient Report</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        position: relative;
-        margin-left: 3px;
-        margin-right: 3px;
-      }
-      header {
-        padding: 10px;
-        display: flex;
-        justify-content: space-between;
-      }
-      .lab-name {
-        float: left;
-      }
-      .logo {
-        float: right;
-      }
-      .lab-name h2 {
-        margin: 0;
-      }
-      .logo img {
-        max-height: 150px;
-        max-width: 150px;
-      }
-      table {
+   <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      font-family: 'Roboto', sans-serif;
+      font-weight: 400;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+
+    }
+    .main_content{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-left: 20px;
+    }
+    table {
         width: 100%;
         border-collapse: collapse;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
-      table,
-      th,
+      
+      /* Style the table headers */
+      th {
+        background-color: #18BBAAFF;
+        color: white;
+        text-align: left;
+        padding: 12px;
+        font-weight: 500;
+        font-family: 'Roboto', sans-serif;
+      }
+      
+      /* Style the table rows */
+      tr {
+        transition: background-color 0.3s;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      
+      tr:hover {
+        background-color: #ddd;
+      }
+      
+      /* Style the table cells */
       td {
-        border: 1px solid black;
+        padding: 12px;
+        text-align: left;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 300;
       }
-      th,
-      td {
-        padding: 8px;
-        text-align: center;
+      
+      /* Add a hover effect to table cells */
+      td:hover {
+        background-color: #e0e0e0;
       }
-      footer {
-        color: black;
-        padding: 10px;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
+      #logo-image{
+        height: 50px;
+        width: 250px;
+        }
+      .stamp{
         display: flex;
-        justify-content: space-between;
+        align-items:center;
+        justify-content: center;
+        margin-top: 10px;
       }
-      .signature {
-        float: left;
-      }
-      .stamp {
-        float: right;
-      }
-    </style>
-  </head>
+  </style>
+</head>
   <body>
     <!-- Header Section -->
     <header>
@@ -72,10 +90,12 @@
 
     <!-- Body Section -->
     <h1>Patient Report</h1>
+<div class="main_content">
     <p><strong>Name:</strong> {{name}}</p>
     <p><strong>Date:</strong> {{date}}</p>
     <p><strong>Age:</strong> {{age}}</p>
     <p><strong>Sex:</strong> {{sex}}</p>
+  </div>
 
     <!-- Liver Function Test Table -->
     <h2>Liver Function Test</h2>
@@ -102,9 +122,6 @@
 
     <!-- Footer Section -->
     <footer>
-      <div class="signature">
-        Signature: <img src="{{signature}}" alt="Laboratory signature" id="logo-image"/>
-      </div>
       <div class="stamp">
         Stamp: <img src="{{stamp}}" alt="Laboratory signature" id="logo-image" />
       </div>

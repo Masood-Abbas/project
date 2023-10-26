@@ -1,4 +1,3 @@
-const express=require(`express`)
 const mongoose=require(`mongoose`)
 const jwt=require("jsonwebtoken")
 const bcrypt=require(`bcrypt`)
@@ -42,6 +41,8 @@ const userschema= new mongoose.Schema({
 userschema.methods.generateAuthToken = async function () {
     try {
       const token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
+      this.tokens=this.tokens.concat({token})
+      await this.save()
       return token;
     } catch (e) {
       console.log(e);
