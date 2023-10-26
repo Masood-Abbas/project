@@ -78,14 +78,10 @@ router.patch('/:id', async (req, res) => {
         { name: newName ,permissions:newPermissions},
         { new: true }
       );
-
-
       if (!updatedRole) {
         return res.status(404).json({ message: 'Title not found' });
       }
-  
-      res.status(200).json({ message: 'Role updated successfully!' })
-  
+      res.status(200).json({ message: 'Role updated successfully!' }) 
   } catch (error) {
     res.status(500).json({ error: 'Error updating item' });
   }
@@ -100,6 +96,108 @@ router.delete('/:id', async (req, res) => {
       } catch (error) {
         res.status(500).json({ error: 'Error deleting item' });
       }
+});
+// search api
+router.get('/searc', async (req, res) => {
+  const query = req.query.q;
+  try {
+    let results;
+    if (!query) {
+      results = await Role.find({});
+    } else {
+      results = await Role.find({
+        $or: [
+          { name : { $regex: new RegExp(query, 'i') } },
+        ],
+      });
+    }
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/search', async (req, res) => {
+  const query = req.query.q;
+
+  try {
+    let roleWithPermissions;
+
+    if (query) {
+      // If a query is provided, perform a search based on the role name
+      roleWithPermissions = await Role.aggregate([
+        {
+          $lookup: {
+            from: 'permissions',
+            localField: 'permissions',
+            foreignField: 'id',
+            as: 'permissionsData',
+          },
+        },
+        {
+          $match: {
+            name: { $regex: new RegExp(query, 'i') },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: 1,
+            name: 1,
+            permissions: {
+              $map: {
+                input: '$permissionsData',
+                as: 'perm',
+                in: {
+                  id: '$$perm.id',
+                  name: '$$perm.name',
+                },
+              },
+            },
+          },
+        },
+      ]);
+    } else {
+      // If no query is provided, get all roles with permissions
+      roleWithPermissions = await Role.aggregate([
+        {
+          $lookup: {
+            from: 'permissions',
+            localField: 'permissions',
+            foreignField: 'id',
+            as: 'permissionsData',
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: 1,
+            name: 1,
+            permissions: {
+              $map: {
+                input: '$permissionsData',
+                as: 'perm',
+                in: {
+                  id: '$$perm.id',
+                  name: '$$perm.name',
+                },
+              },
+            },
+          },
+        },
+      ]);
+    }
+
+    if (roleWithPermissions.length === 0) {
+      return res.status(404).json({ error: 'No roles found' });
+    }
+
+    res.json(roleWithPermissions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
 });
 
 module.exports=router;
