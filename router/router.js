@@ -16,7 +16,8 @@ const liverRouter=require(`./forms/liverTest`)
 const bloodGlucoseRouter=require(`./forms/bloodGlucoseTest`)
 const lipidProfileTestRouter=require(`./forms/lipidProfileTest`)
 const deletePdfRouter=require(`./deletePdf/index`)
-
+// Download pdf router
+const downloadRouter=require(`./downloadPDF/pdfDownload`)
 
 router.use(`/user`,userRouter)
 router.use('/permission',auth, permissionRoute);
@@ -31,6 +32,8 @@ router.use(`/liverreport`,liverRouter)
 router.use(`/glucosereport`,bloodGlucoseRouter)
 router.use(`/lipidreport`,lipidProfileTestRouter)
 router.use(`/deletePdf`,deletePdfRouter)
+// download pdf url
+router.use(`/download`,downloadRouter)
 
 
 

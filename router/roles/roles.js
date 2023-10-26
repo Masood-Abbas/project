@@ -26,15 +26,44 @@ router.post('/', async (req, res) => {
 });
 
 
-router.get('/', async (req, res) => {
+router.get('/get', async (req, res) => {
   try {
-    const items = await Role.find({},'name permissions id');
-    res.json(items);
+    const roleWithPermissions = await Role.aggregate([
+      {
+        $lookup: {
+          from: 'permissions',
+          localField: 'permissions',
+          foreignField: 'id', 
+          as: 'permissionsData', 
+        },
+      },
+      {
+        $project: {
+          _id: 0, 
+          id:1,
+          name: 1,
+          permissions: {
+            $map: {
+              input: '$permissionsData',
+              as: 'perm',
+              in: {
+                id: '$$perm.id',
+                name: '$$perm.name',
+              },
+            },
+          },
+        },
+      },
+    ]);
+    if (roleWithPermissions.length === 0) {
+      return res.status(404).json({ error: 'No roles found' });
+    }
+    res.json(roleWithPermissions);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching items' });
+    console.log(error);
+    res.status(500).json({ error: 'Error fetching data' });
   }
 });
-
 
 
 router.patch('/:id', async (req, res) => {

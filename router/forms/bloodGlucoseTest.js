@@ -7,6 +7,7 @@ const fs = require("fs");
 const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
 const bodyParser = require("body-parser"); 
+const fsExtra = require("fs-extra");
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -107,15 +108,27 @@ router.post("/", async (req, res) => {
     await browser.close();
 
     console.log("PDF generated successfully!");
-
-    // Set the 'Content-Type' header to 'application/pdf'
-    res.set("Content-Type", "application/pdf");
-    // Send the PDF as a download
-    res.download(pdfPath, pdfFileName);
+     //Delete the Pdf 
+    schedulePdfDeletion(pdfPath)
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).json({ error: "Error generating PDF" });
   }
 });
 
+const schedulePdfDeletion = (pdfPath) => {
+  const deleteInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+  setTimeout(() => {
+    if (fs.existsSync(pdfPath)) {
+      fsExtra.remove(pdfPath, (err) => {
+        if (err) {
+          console.error(`Error deleting file ${pdfPath}:`, err);
+        } else {
+          console.log(`Deleted file ${pdfPath}`);
+        }
+      });
+    }
+  }, deleteInterval);
+};
 module.exports = router;
