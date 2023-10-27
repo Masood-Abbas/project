@@ -41,7 +41,6 @@ router.post("/", auth, async (req, res) => {
 
     // generate token
     const token = await newUser.generateAuthToken();
-    res.cookie('jwt', token, { httpOnly: true, secure: true });
     res.send(result);
     // Email
     // Create a Nodemailer transporter using SMTP
