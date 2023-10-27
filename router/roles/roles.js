@@ -98,25 +98,6 @@ router.delete('/:id', async (req, res) => {
       }
 });
 // search api
-router.get('/searc', async (req, res) => {
-  const query = req.query.q;
-  try {
-    let results;
-    if (!query) {
-      results = await Role.find({});
-    } else {
-      results = await Role.find({
-        $or: [
-          { name : { $regex: new RegExp(query, 'i') } },
-        ],
-      });
-    }
-    res.json(results);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
 
 router.get('/search', async (req, res) => {
   const query = req.query.q;
@@ -125,7 +106,6 @@ router.get('/search', async (req, res) => {
     let roleWithPermissions;
 
     if (query) {
-      // If a query is provided, perform a search based on the role name
       roleWithPermissions = await Role.aggregate([
         {
           $lookup: {
@@ -159,7 +139,6 @@ router.get('/search', async (req, res) => {
         },
       ]);
     } else {
-      // If no query is provided, get all roles with permissions
       roleWithPermissions = await Role.aggregate([
         {
           $lookup: {

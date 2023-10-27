@@ -1,6 +1,5 @@
 const express = require(`express`);
 const user = require(`../../models/user`);
-const Role = require(`../../models/roles`);
 const bcrypt = require(`bcrypt`);
 const nodemailer = require("nodemailer");
 const auth = require(`../../middleware/auth`);
@@ -42,7 +41,7 @@ router.post("/", auth, async (req, res) => {
 
     // generate token
     const token = await newUser.generateAuthToken();
-    res.header(`x-auth-token`, token);
+    res.cookie('jwt', token, { httpOnly: true, secure: true });
     res.send(result);
     // Email
     // Create a Nodemailer transporter using SMTP
@@ -96,13 +95,13 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const usera = await user.findOne({ email });
     if (!usera) {
-      return res.status(404).send("User not found");
+      return res.status(404).send("Users not found");
     }
 
     const isMatch = await bcrypt.compare(password, usera.password);
     if (isMatch) {
       const token = await usera.generateAuthToken();
-      res.setHeader("Authorization", `Bearer ${token}`);
+      res.cookie('jwt', token, { httpOnly: true, secure: true });
       res.status(201).send("Login successfully");
     } else {
       res.status(401).send("Invalid password");
@@ -112,7 +111,9 @@ router.post("/login", async (req, res) => {
     res.status(500).send("Invalid login");
   }
 });
+
 // update user
+
 router.patch("/", auth, async (req, res) => {
   try {
     const { employeeNo, password, ...updateFields } = req.body;
@@ -128,37 +129,22 @@ router.patch("/", auth, async (req, res) => {
       }
     );
     if (!updateUser) {
-      return res.status(404).send("User not found");
+      return res.status(404).send("User not update");
     }
     res.status(201).send(updateUser);
   } catch (error) {
+    if (error.code === 11000) {
+      res.status(400).send("email exist");
+    }
     console.log(error);
     res.status(500).send("Invalid");
   }
 });
-// get all user
-router.get("/", auth, async (req, res) => {
-  try {
-    const users = await user?.find(
-      {},
-      "firstName lastName category email employeeType employeeNo password id title"
-    );
-    if (users?.length) {
-      res.status(201).json(users);
-    } else {
-      res.status(404).send("users not found");
-    }
-  } catch (error) {
-    if (error.code === 11000) {
-      res.status(400).send("change email");
-    }
-    res
-      .status(500)
-      .json({ message: "Error fetching users", error: error.message });
-  }
-});
+
+
 // Delete the user
-router.delete(`/:employeeNo`, async (req, res) => {
+
+router.delete(`/:employeeNo`,auth, async (req, res) => {
   try {
     const employeeNo = req.params.employeeNo;
     const deleteUser = await user.deleteOne({ employeeNo });
@@ -172,7 +158,9 @@ router.delete(`/:employeeNo`, async (req, res) => {
   }
 });
 
-router.get("/get", async (req, res) => {
+// get all user 
+
+router.get("/",auth, async (req, res) => {
   try {
     const usersWithRolesAndPermissions = await user.aggregate([
       {
@@ -236,16 +224,89 @@ router.get("/get", async (req, res) => {
   }
 });
 
+// get user by token
+
+router.get("/:token",auth, async (req, res) => {
+  const token = req.params.token;
+
+  try {
+    const userWithToken = await user.aggregate([
+      {
+        $match: {
+          'tokens.token': token
+        }
+      },
+      {
+        $lookup: {
+          from: "titles",
+          localField: "titles",
+          foreignField: "id",
+          as: "titleData",
+        }
+      },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "roles",
+          foreignField: "id",
+          as: "rolesData",
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          employeeNo: 1,
+          firstName: 1,
+          lastName: 1,
+          email: 1,
+          employeeType: 1,
+          category: 1,
+          roles: {
+            $map: {
+              input: "$rolesData",
+              as: "perm",
+              in: {
+                id: "$$perm.id",
+                name: "$$perm.name",
+                permissions:"$$perm.permissions",
+              },
+            },
+          },
+          titles: {
+            $map: {
+              input: "$titleData",
+              as: "perm",
+              in: {
+                id: "$$perm.id",
+                name: "$$perm.name",
+              },
+            },
+          },
+        },
+      },
+    ]);
+
+    if (!userWithToken || userWithToken.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.json(userWithToken[0]);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+
 //search api
 
-router.get('/search', async (req, res) => {
+router.get('/get/search', auth, async (req, res) => {
   try {
     const query = req.query.q;
 
     let usersWithRolesAndPermissions;
 
     if (query) {
-      // If a query is provided, perform a search based on the user's first name or last name
       usersWithRolesAndPermissions = await user.aggregate([
         {
           $lookup: {
@@ -287,7 +348,7 @@ router.get('/search', async (req, res) => {
                 in: {
                   id: '$$perm.id',
                   name: '$$perm.name',
-                  permissions:"$$perm.permissions",
+                  permissions: '$$perm.permissions',
                 },
               },
             },
@@ -338,7 +399,7 @@ router.get('/search', async (req, res) => {
                 in: {
                   id: '$$perm.id',
                   name: '$$perm.name',
-                  permissions:"$$perm.permissions",
+                  permissions: '$$perm.permissions',
                 },
               },
             },
@@ -360,7 +421,6 @@ router.get('/search', async (req, res) => {
     if (usersWithRolesAndPermissions.length === 0) {
       return res.status(404).json({ error: 'No data found' });
     }
-
     res.json(usersWithRolesAndPermissions);
   } catch (error) {
     console.error(error);
@@ -368,9 +428,8 @@ router.get('/search', async (req, res) => {
   }
 });
 
-
 // logout
-router.get("/logout", auth, async (req, res) => {
+router.get("/logout",auth ,async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).send("User not authenticated");
@@ -378,9 +437,10 @@ router.get("/logout", auth, async (req, res) => {
     req.user.tokens = req.user.tokens.filter(
       (token) => token.token !== req.token
     );
-    const result = await req.user.save();
-    console.log(result);
-    res.setHeader("Authorization", "");
+      
+    res.clearCookie(`jwt`)
+     await req.user.save();
+
     res.send("Successfully logged out");
   } catch (error) {
     console.error(error);
