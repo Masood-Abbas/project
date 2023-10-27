@@ -207,6 +207,7 @@ router.get("/get", async (req, res) => {
               in: {
                 id: "$$perm.id",
                 name: "$$perm.name",
+                permissions:"$$perm.permissions",
               },
             },
           },
@@ -286,6 +287,7 @@ router.get('/search', async (req, res) => {
                 in: {
                   id: '$$perm.id',
                   name: '$$perm.name',
+                  permissions:"$$perm.permissions",
                 },
               },
             },
@@ -336,6 +338,7 @@ router.get('/search', async (req, res) => {
                 in: {
                   id: '$$perm.id',
                   name: '$$perm.name',
+                  permissions:"$$perm.permissions",
                 },
               },
             },
