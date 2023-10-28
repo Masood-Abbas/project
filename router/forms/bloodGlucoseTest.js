@@ -106,7 +106,7 @@ router.post("/", async (req, res) => {
 
     // Close the browser
     await browser.close();
-
+    res.send(`PDF generated successfully`)
     console.log("PDF generated successfully!");
      //Delete the Pdf 
     schedulePdfDeletion(pdfPath)

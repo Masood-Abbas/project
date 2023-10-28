@@ -107,9 +107,7 @@ router.post("/", async (req, res) => {
     fs.writeFileSync(pdfPath,pdfBuffer)
     await browser.close()
     console.log("PDF generated successfully!");
-
-
-
+    res.send(`PDF generated successfully`)
   } catch (error) {
     console.error("Error generating PDF:", error);
     res.status(500).json({ error: "Error generating PDF" });

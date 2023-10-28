@@ -22,10 +22,10 @@ const router = express.Router();
         test,
       });
   
-      // Save the new patient record
       const result = await newPatient.save();
   
       // Send the email
+
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -38,18 +38,17 @@ const router = express.Router();
         from: process.env.EMAIL,
         to: email,
         subject: "Information",
-        text: `${firstName} ${lastName}'s blood has been collected`,
+        text: `${firstName} ${lastName}'s sample has been collected`,
       };
   
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error("Error sending email:", error);
-          // Handle the error and respond to the client
           res.status(500).json({ error: "Error sending email" });
         } else {
           console.log("Email sent:", info.response);
           // Send the success response to the client
-          res.status(201).json({ message: "Email sent successfully" });
+          res.status(201).json({ message: "Email sent successfully and save the data" });
         }
       });
     } catch (error) {
@@ -84,6 +83,25 @@ router.delete(`/:id`, async (req, res) => {
   } catch (error) {
     res.status(404).send(error);
     console.log(error);
+  }
+});
+router.get('/search', async (req, res) => {
+  const query = req.query.q;
+  try {
+    let results;
+    if (!query) {
+      results = await Patient.find({});
+    } else {
+      results = await Patient.find({
+        $or: [
+          { firstName: { $regex: new RegExp(query, 'i') } },
+        ],
+      });
+    }
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 module.exports = router;

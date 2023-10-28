@@ -76,7 +76,25 @@ router.post('/', async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  });
-
-
+});
+// search Api
+router.get('/search', async (req, res) => {
+  const query = req.query.q;
+  try {
+    let results;
+    if (!query) {
+      results = await Title.find({});
+    } else {
+      results = await Title.find({
+        $or: [
+          { name : { $regex: new RegExp(query, 'i') } },
+        ],
+      });
+    }
+    res.json(results);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 module.exports=router;
