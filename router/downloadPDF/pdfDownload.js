@@ -6,7 +6,7 @@ const path = require('path');
 const publicFolder = path.join(__dirname,`../../public/pdf`);
 
 
-router.delete('/', (req, res) => {
+router.get('/', (req, res) => {
    try {
     const {name}=req.body
     const pdfFileName = `${name}.pdf`; 
