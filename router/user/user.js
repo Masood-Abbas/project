@@ -101,7 +101,8 @@ router.post("/login", async (req, res) => {
     if (isMatch) {
       const token = await usera.generateAuthToken();
       res.cookie('jwt', token, { httpOnly: true, secure: true });
-      res.status(201).send("Login successfully");
+      const data=token
+      res.status(201).json({ message: "Login successfully", data: data });
     } else {
       res.status(401).send("Invalid password");
     }
