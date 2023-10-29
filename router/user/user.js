@@ -2,10 +2,9 @@ const express = require(`express`);
 const user = require(`../../models/user`);
 const bcrypt = require(`bcrypt`);
 const nodemailer = require("nodemailer");
-const auth = require(`../../middleware/auth`);
 const router = express.Router();
 // Register user
-router.post("/", auth, async (req, res) => {
+router.post("/",  async (req, res) => {
   try {
     const {
       employeeNo,
@@ -114,7 +113,7 @@ router.post("/login", async (req, res) => {
 
 // update user
 
-router.patch("/", auth, async (req, res) => {
+router.patch("/",  async (req, res) => {
   try {
     const { employeeNo, password, ...updateFields } = req.body;
     if (password) {
@@ -144,7 +143,7 @@ router.patch("/", auth, async (req, res) => {
 
 // Delete the user
 
-router.delete(`/:employeeNo`,auth, async (req, res) => {
+router.delete(`/:employeeNo`, async (req, res) => {
   try {
     const employeeNo = req.params.employeeNo;
     const deleteUser = await user.deleteOne({ employeeNo });
@@ -160,7 +159,7 @@ router.delete(`/:employeeNo`,auth, async (req, res) => {
 
 // get all user 
 
-router.get("/",auth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const usersWithRolesAndPermissions = await user.aggregate([
       {
@@ -226,7 +225,7 @@ router.get("/",auth, async (req, res) => {
 
 // get user by token
 
-router.get("/:token",auth, async (req, res) => {
+router.get("/:token", async (req, res) => {
   const token = req.params.token;
 
   try {
@@ -300,7 +299,7 @@ router.get("/:token",auth, async (req, res) => {
 
 //search api
 
-router.get('/get/search', auth, async (req, res) => {
+router.get('/get/search',  async (req, res) => {
   try {
     const query = req.query.q;
 
@@ -429,7 +428,7 @@ router.get('/get/search', auth, async (req, res) => {
 });
 
 // logout
-router.get("/logout",auth ,async (req, res) => {
+router.get("/logout",async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).send("User not authenticated");

@@ -101,7 +101,7 @@ router.delete(`/:id`, async (req, res) => {
     console.log(error);
   }
 });
-router.get('/search', async (req, res) => {
+router.get('/get/search', async (req, res) => {
   const query = req.query.q;
   try {
     let results;
