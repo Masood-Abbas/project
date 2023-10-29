@@ -59,7 +59,23 @@ const router = express.Router();
 // get all patientes
 router.get(`/`, async (req, res) => {
   try {
+
     const patients = await Patient?.find({});
+    if (patients?.length) {
+      res.send(patients);
+    } else {
+      res.send(`Patient are not found`);
+    }
+  } catch (error) {
+    res.status(404).send(error);
+    console.log(error);
+  }
+});
+// get by id
+router.get(`/:id`, async (req, res) => {
+  try {
+    const id=req.params.id
+    const patients = await Patient?.find({id:id});
     if (patients?.length) {
       res.send(patients);
     } else {
