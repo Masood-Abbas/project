@@ -4,7 +4,7 @@ const bcrypt = require(`bcrypt`);
 const nodemailer = require("nodemailer");
 const router = express.Router();
 // Register user
-router.post("/",  async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const {
       employeeNo,
@@ -19,8 +19,11 @@ router.post("/",  async (req, res) => {
       profileImg,
     } = req.body;
 
-    if (user.employeeNo === employeeNo) {
-      return res.json({ msg: "employeeNo is present" });
+    // Check if employeeNo or email already exists
+    const existingUser = await user.findOne({ $or: [{ employeeNo }, { email }] });
+
+    if (existingUser) {
+      return res.status(400).json({ msg: "EmployeeNo or email already exists" });
     }
 
     const newUser = new user({
@@ -40,7 +43,8 @@ router.post("/",  async (req, res) => {
 
     // generate token
     const token = await newUser.generateAuthToken();
-    res.send(result);
+    // res.send(result); // You may or may not send back the result depending on your requirements
+    
     // Email
     // Create a Nodemailer transporter using SMTP
     const transporter = nodemailer.createTransport({
@@ -55,15 +59,15 @@ router.post("/",  async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: "information",
-      text: `Employe No: ${employeeNo}
+      subject: "Information",
+      text: `Employee No: ${employeeNo}
             First Name: ${firstName}
             Last Name: ${lastName}
             Email: ${email}
-            Employe-type: ${employeeType}
-            Catgory: ${category}
-            password: ${password}
-            Profile_img: ${profileImg}`,
+            Employee Type: ${employeeType}
+            Category: ${category}
+            Password: ${password}
+            Profile Image: ${profileImg}`,
     };
 
     // send email
@@ -85,7 +89,6 @@ router.post("/",  async (req, res) => {
     }
   }
 });
-
 // login to user
 
 router.post("/login", async (req, res) => {
