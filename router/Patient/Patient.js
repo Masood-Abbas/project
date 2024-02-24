@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
     });
 
     const result = await newPatient.save();
-    res.send(result);
+    res.send("Reqested accept successfully");
 
     // Send the email
 
