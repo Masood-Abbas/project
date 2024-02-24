@@ -30,6 +30,7 @@ const patientSchema=new mongooes.Schema({
     },
     statusbar:{
         type:String,
+        default:"pending"
     },
     age:{
         type:Number,
