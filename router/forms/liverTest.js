@@ -4,6 +4,7 @@ const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 const path = require(`path`);
 const fs = require("fs");
+const nodemailer = require("nodemailer");
 const { promisify } = require("util");
 const readFileAsync = promisify(fs.readFile);
 const bodyParser = require("body-parser"); 
@@ -14,6 +15,7 @@ router.post("/", async (req, res) => {
   const {
     pdfName,
     name,
+    email,
     age,
     sex,
     bilirubinTotal,
@@ -38,6 +40,7 @@ router.post("/", async (req, res) => {
     logo: `data:image/png;base64,${logoBase64}`,
     name,
     pdfName,
+    email,
     date,
     age,
     sex,
@@ -139,6 +142,34 @@ router.post("/", async (req, res) => {
     console.error("Error generating PDF:", error);
     res.status(500).json({ error: "Error generating PDF" });
   }
+   
+  // send mail to patient to pdf name
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
+    },
+  });
+
+  // Email options
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: email,
+    subject: "information",
+    text: `You can download the pdf our website your pdf name is ${pdfName}`
+  };
+
+  // send email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email: " + error);
+      res.status(404).send("Error occurred while sending email");
+    } else {
+      console.log("Email sent: " + info.response);
+      res.status(201).send("Email sent successfully");
+    }
+  });
 });
 
 module.exports = router;
