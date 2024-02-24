@@ -13,6 +13,9 @@ const patientSchema=new mongooes.Schema({
     phoneNumber:{
         type:String,
     },
+    pdfName:{
+        type:String,
+    },
     CNIC:{
         type:String,
     },

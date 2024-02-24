@@ -25,6 +25,7 @@ router.post("/", async (req, res) => {
     });
 
     const result = await newPatient.save();
+    res.send(result)
 
     // Send the email
 
