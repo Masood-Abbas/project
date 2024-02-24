@@ -137,7 +137,12 @@ router.post("/", async (req, res) => {
 
     Date of Test: ${date}
     PDF Filename: ${pdfName}
-    You have two options to access your test results:`
+    you can access the test report download and collect from our website
+    Thank you for choosing Digi LAb. We appreciate the trust you place in us for your healthcare needs.
+
+   Wishing you continued good health.
+
+    Best regards`
   };
 
   // send email
