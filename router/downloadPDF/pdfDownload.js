@@ -6,7 +6,7 @@ const path = require('path');
 const publicFolder = path.join(__dirname,`../../public/pdf`);
 
 
-router.get('/', (req, res) => {
+router.post('/', (req, res) => {
    try {
     const {name}=req.body
     const pdfFileName = `${name}.pdf`; 
@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
 
     res.sendFile(path.join(publicFolder, pdfFileName));
    } catch (error) {
-    res.json({message:"server error",error:error})
+    res.json({message:"Not Found such report!"})
     console.log(error);
    }
 });
