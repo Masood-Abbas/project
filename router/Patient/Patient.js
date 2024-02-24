@@ -10,13 +10,14 @@ router.post("/", async (req, res) => {
   try {
     const latestPatient = await Patient.findOne().sort({ id: -1 });
     const newId = latestPatient ? latestPatient.id + 1 : 1;
-    const { firstName, lastName, phoneNumber, CNIC, gender, email, test } =
+    const { firstName, lastName, phoneNumber,pdfName, CNIC, gender, email, test } =
       req.body;
     const newPatient = new Patient({
       id: newId,
       firstName,
       lastName,
       phoneNumber,
+      pdfName,
       CNIC,
       gender,
       email,
