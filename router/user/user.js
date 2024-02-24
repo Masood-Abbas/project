@@ -225,14 +225,14 @@ router.get("/", async (req, res) => {
 
 // get user by token
 
-router.get("/:token", async (req, res) => {
-  const token = req.params.token;
+router.get("/:email", async (req, res) => {
+  const email = req.params.email;
 
   try {
-    const userWithToken = await user.aggregate([
+    const userWithemail = await user.aggregate([
       {
         $match: {
-          'tokens.token': token
+          'email': email
         }
       },
       {
@@ -285,10 +285,10 @@ router.get("/:token", async (req, res) => {
       },
     ]);
 
-    if (!userWithToken || userWithToken.length === 0) {
+    if (!userWithemail|| userWithemail.length === 0) {
       res.status(404).json({ message: "User not found" });
     } else {
-      res.json(userWithToken[0]);
+      res.json(userWithemail[0]);
     }
   } catch (error) {
     console.error(error);
