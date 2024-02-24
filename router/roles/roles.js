@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.get('/get', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const roleWithPermissions = await Role.aggregate([
       {
