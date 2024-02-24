@@ -5,13 +5,14 @@ const handlebars = require("handlebars");
 const path = require(`path`);
 const fs = require("fs");
 const { promisify } = require("util");
+const nodemailer = require("nodemailer");
 const readFileAsync = promisify(fs.readFile);
 const bodyParser = require("body-parser"); 
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.post("/", async (req, res) => {
-  const { pdfName,name, age, sex, glucose, protein, ketones, blood, pH ,color,bilirubin,urobilinkogen,nitrites} = req.body;
+  const { pdfName,name, age, email, sex, glucose, protein, ketones, blood, pH ,color,bilirubin,urobilinkogen,nitrites} = req.body;
 
   const date = new Date().toLocaleDateString("en-GB");
 
@@ -23,6 +24,7 @@ router.post("/", async (req, res) => {
     logo: `data:image/png;base64,${logoBase64}`,
     pdfName,
     name,
+    email,
     date,
     age,
     sex,
@@ -112,6 +114,42 @@ router.post("/", async (req, res) => {
     console.error("Error generating PDF:", error);
     res.status(500).json({ error: "Error generating PDF" });
   }
+  
+  // send mail to patient to pdf name
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
+    },
+  });
+
+  // Email options
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: email,
+    subject: "information",
+    text: `Dear ${name},
+
+    We hope this message finds you in good health. We are pleased to inform you that your recent test results are now available in a PDF format.
+    
+    Test Results PDF Details:
+
+    Date of Test: ${date}
+    PDF Filename: ${pdfName}
+    You have two options to access your test results:`
+  };
+
+  // send email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email: " + error);
+      res.status(404).send("Error occurred while sending email");
+    } else {
+      console.log("Email sent: " + info.response);
+      res.status(201).send("Email sent successfully");
+    }
+  });
 });
 
 module.exports=router

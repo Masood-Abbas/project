@@ -180,7 +180,7 @@ router.get("/", async (req, res) => {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           employeeNo: 1,
           firstName: 1,
           lastName: 1,
@@ -194,7 +194,7 @@ router.get("/", async (req, res) => {
               in: {
                 id: "$$perm.id",
                 name: "$$perm.name",
-                permissions:"$$perm.permissions",
+                permissions: "$$perm.permissions",
               },
             },
           },
@@ -210,6 +210,11 @@ router.get("/", async (req, res) => {
           },
         },
       },
+      {
+        $sort: {
+          "employeeNo": -1
+        }
+      },
     ]);
 
     if (usersWithRolesAndPermissions.length === 0) {
@@ -222,6 +227,7 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Error fetching data" });
   }
 });
+
 
 // get user by token
 
@@ -253,7 +259,7 @@ router.get("/:email", async (req, res) => {
       },
       {
         $project: {
-          _id: 0,
+          _id: 1,
           employeeNo: 1,
           firstName: 1,
           lastName: 1,
@@ -333,7 +339,7 @@ router.get('/get/search',  async (req, res) => {
         },
         {
           $project: {
-            _id: 0,
+            _id: 1,
             employeeNo: 1,
             firstName: 1,
             lastName: 1,
@@ -384,7 +390,7 @@ router.get('/get/search',  async (req, res) => {
         },
         {
           $project: {
-            _id: 0,
+            _id: 1,
             employeeNo: 1,
             firstName: 1,
             lastName: 1,
