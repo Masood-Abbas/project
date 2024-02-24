@@ -5,6 +5,8 @@ const nodemailer = require("nodemailer");
 const router = express.Router();
 // Register user
 router.post("/", async (req, res) => {
+  const latestUser = await user.findOne().sort({ id: -1 });
+  const newId = latestUser ? latestUser.id + 1 : 1;
   try {
     const {
       employeeNo,
@@ -17,6 +19,7 @@ router.post("/", async (req, res) => {
       titles,
       roles,
       profileImg,
+     
     } = req.body;
 
     // Check if employeeNo or email already exists
@@ -37,6 +40,7 @@ router.post("/", async (req, res) => {
       titles,
       roles,
       profileImg,
+      id:newId
     });
 
     const result = await newUser.save();
@@ -183,7 +187,8 @@ router.get("/", async (req, res) => {
       },
       {
         $project: {
-          _id: 1,
+          _id: 0,
+          id:1,
           employeeNo: 1,
           firstName: 1,
           lastName: 1,
@@ -215,13 +220,13 @@ router.get("/", async (req, res) => {
       },
       {
         $sort: {
-          "employeeNo": -1
+          "id": -1
         }
       },
     ]);
 
     if (usersWithRolesAndPermissions.length === 0) {
-      return res.status(404).json({ error: "No data found" });
+      return res.status(404).json([]);
     }
 
     res.json(usersWithRolesAndPermissions);
@@ -262,7 +267,8 @@ router.get("/:email", async (req, res) => {
       },
       {
         $project: {
-          _id: 1,
+          _id: 0,
+          id:1,
           employeeNo: 1,
           firstName: 1,
           lastName: 1,
@@ -342,7 +348,8 @@ router.get('/get/search',  async (req, res) => {
         },
         {
           $project: {
-            _id: 1,
+            _id: 0,
+            id:1,
             employeeNo: 1,
             firstName: 1,
             lastName: 1,
@@ -393,7 +400,8 @@ router.get('/get/search',  async (req, res) => {
         },
         {
           $project: {
-            _id: 1,
+            _id: 0,
+            id:1,
             employeeNo: 1,
             firstName: 1,
             lastName: 1,

@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
     if (instrument?.length) {
       res.send(instrument);
     } else {
-      res.send("instrument are not found");
+      res.send([]);
     }
   } catch (error) {
     res.status(500).send(`internal error`);
