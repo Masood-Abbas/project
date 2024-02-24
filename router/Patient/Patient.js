@@ -10,13 +10,25 @@ router.post("/", async (req, res) => {
   try {
     const latestPatient = await Patient.findOne().sort({ id: -1 });
     const newId = latestPatient ? latestPatient.id + 1 : 1;
-    const { firstName, lastName, phoneNumber,pdfName, CNIC, gender, email, test } =
-      req.body;
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      pdfName,
+      CNIC,
+      gender,
+      statusbar,
+      age,
+      email,
+      test,
+    } = req.body;
     const newPatient = new Patient({
       id: newId,
       firstName,
       lastName,
       phoneNumber,
+      statusbar,
+      age,
       pdfName,
       CNIC,
       gender,
@@ -25,7 +37,7 @@ router.post("/", async (req, res) => {
     });
 
     const result = await newPatient.save();
-    res.send(result)
+    res.send(result);
 
     // Send the email
 

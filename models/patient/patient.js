@@ -28,6 +28,12 @@ const patientSchema=new mongooes.Schema({
     test:{
         type:String,
     },
+    statusbar:{
+        type:String,
+    },
+    age:{
+        type:Number,
+    },
     createdAt:{
         type:Date,
         default:Date.now,
