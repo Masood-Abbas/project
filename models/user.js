@@ -32,18 +32,19 @@ const userschema = new mongoose.Schema({
   },
   titles: {
     type: [Number],
-    required: true,
   },
   roles: {
     type: [Number],
-    required: true,
+  },
+  phoneNumber: {
+    type: Number,
   },
   profileImg: {
     type: String,
     default: "/default-profile-img.png",
   },
 });
-1
+1;
 userschema.methods.generateAuthToken = async function () {
   try {
     const token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);

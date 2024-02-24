@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
       password,
       titles,
       roles,
+      phoneNumber,
       profileImg,
      
     } = req.body;
@@ -39,6 +40,7 @@ router.post("/", async (req, res) => {
       password,
       titles,
       roles,
+      phoneNumber,
       profileImg,
       id:newId
     });
@@ -71,7 +73,9 @@ router.post("/", async (req, res) => {
             Employee Type: ${employeeType}
             Category: ${category}
             Password: ${password}
-            Profile Image: ${profileImg}`,
+            Profile Image: ${profileImg}
+            Phone Number: ${phoneNumber} `,
+            
     };
 
     // send email
@@ -81,7 +85,7 @@ router.post("/", async (req, res) => {
         res.status(404).send("Error occurred while sending email");
       } else {
         console.log("Email sent: " + info.response);
-        res.status(201).send("Email sent successfully");
+        res.status(201).send({message:'User Created Successfully!'});
       }
     });
   } catch (error) {
@@ -192,6 +196,7 @@ router.get("/", async (req, res) => {
           employeeNo: 1,
           firstName: 1,
           lastName: 1,
+          phoneNumber:1,
           email: 1,
           employeeType: 1,
           category: 1,
@@ -273,6 +278,7 @@ router.get("/:email", async (req, res) => {
           firstName: 1,
           lastName: 1,
           email: 1,
+          phoneNumber:1,
           employeeType: 1,
           category: 1,
           roles: {
@@ -354,6 +360,7 @@ router.get('/get/search',  async (req, res) => {
             firstName: 1,
             lastName: 1,
             email: 1,
+            phoneNumber:1,
             employeeType: 1,
             category: 1,
             roles: {
@@ -404,6 +411,7 @@ router.get('/get/search',  async (req, res) => {
             id:1,
             employeeNo: 1,
             firstName: 1,
+            phoneNumber:1,
             lastName: 1,
             email: 1,
             employeeType: 1,

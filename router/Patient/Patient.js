@@ -74,7 +74,7 @@ router.get(`/`, async (req, res) => {
     if (patients?.length) {
       res.send(patients);
     } else {
-      res.send(`Patient are not found`);
+      res.send([]);
     }
   } catch (error) {
     res.status(404).send(error);
