@@ -28,7 +28,7 @@ const patientSchema=new mongooes.Schema({
     test:{
         type:String,
     },
-    statusbar:{
+    reportStatus:{
         type:String,
         default:"pending"
     },
