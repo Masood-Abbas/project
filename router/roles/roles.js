@@ -169,8 +169,7 @@ router.get('/search', async (req, res) => {
     }
 
     if (roleWithPermissions.length === 0) {
-      return res.status(404).json([
-      ]);
+      return res.status(404).json({ error: 'No roles found' });
     }
 
     res.json(roleWithPermissions);
