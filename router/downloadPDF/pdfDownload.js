@@ -8,7 +8,7 @@ const publicFolder = path.join(__dirname,`../../public/pdf`);
 
 router.post('/', (req, res) => {
    try {
-    const {name}=req.params
+    const {name}=req.body
     const pdfFileName = `${name}.pdf`; 
 
     res.setHeader('Content-Disposition', `attachment; filename=${pdfFileName}`);
