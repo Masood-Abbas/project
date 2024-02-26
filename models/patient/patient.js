@@ -15,6 +15,7 @@ const patientSchema=new mongooes.Schema({
     },
     pdfName:{
         type:String,
+        unique: true,
     },
     CNIC:{
         type:String,

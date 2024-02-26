@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
+   
     const latestPatient = await Patient.findOne().sort({ id: -1 });
     const newId = latestPatient ? latestPatient.id + 1 : 1;
     const {
@@ -22,6 +23,10 @@ router.post("/", async (req, res) => {
       email,
       test,
     } = req.body;
+    const existingPdf = await Patient.findOne({pdfName});
+    if (existingPdf) {
+      return res.status(400).json({ msg: "Pdf already exist" });
+    }
     const newPatient = new Patient({
       id: newId,
       firstName,
@@ -77,9 +82,13 @@ router.post("/", async (req, res) => {
       }
     });
   } catch (error) {
+    if (error.code === 11000) {
+      res.status(400).send("pdf alrady exist");
+    }
     console.error(error);
     res.status(404).json({ error: "An error occurred" });
   }
+  
 });
 // get all patientes
 router.get(`/`, async (req, res) => {
