@@ -13,7 +13,7 @@ router.post(`/`, async (req, res) => {
       quantity: req.body.quantity,
     });
     const result = await newInstrument.save();
-    res.status(201).send(newInstrument);
+    res.status(201).json({message: "Instrument saved successfully"});
   } catch (error) {
     res.send(error);
   }
@@ -47,7 +47,7 @@ router.patch(`/:id`, async (req, res) => {
     if (!updateInstrument) {
       return res.status(404).send(`instrument not found`);
     } else {
-      return res.status(201).send(`instrument updated successfully`);
+      return res.status(201).json({message:'instrument updated successfully'});
     }
   } catch (error) {
     res.send(`server error`);
@@ -64,7 +64,7 @@ try {
     if(!deleteInstrument){
         return res.status(404).send(`instrument not found`)
     }else{
-        return res.status(201).send(`instrument deleted successfully'`)
+        return res.status(201).json({message: 'instrument deleted successfully'})
     }
 } catch (error) {
     res.send("server error")

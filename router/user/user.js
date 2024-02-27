@@ -139,9 +139,9 @@ router.patch("/",  async (req, res) => {
       }
     );
     if (!updateUser) {
-      return res.status(404).send("User not update");
+      return res.status(404).json({message: "User not update"});
     }
-    res.status(201).send(updateUser);
+    res.status(201).json({message: 'User updated successfully'});
   } catch (error) {
     if (error.code === 11000) {
       res.status(400).send("email exist");
@@ -162,7 +162,7 @@ router.delete(`/:employeeNo`, async (req, res) => {
       console.log(error);
       return res.status(404).send(error);
     }
-    res.status(201).send(deleteUser);
+    res.status(201).json({message: 'User Deleted successfully'});
   } catch (error) {
     res.status(500).send(error);
   }
