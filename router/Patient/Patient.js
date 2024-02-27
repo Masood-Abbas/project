@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
     } = req.body;
     const existingPdf = await Patient.findOne({pdfName});
     if (existingPdf) {
-      return res.status(400).json({ msg: "Pdf already exists" });
+      return res.status(400).json({ message: "Report Id already exists!" });
     }
     const newPatient = new Patient({
       id: newId,
