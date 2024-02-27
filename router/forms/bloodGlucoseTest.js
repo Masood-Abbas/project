@@ -120,7 +120,7 @@ router.post('/', async (req, res) => {
     schedulePdfDeletion(pdfPath);
 
     // Send success response for PDF generation
-    res.status(200).send('PDF generated successfully');
+    res.status(200).json({message:'PDF generated successfully'});
   } catch (pdfError) {
     console.error('Error generating PDF:', pdfError);
 
