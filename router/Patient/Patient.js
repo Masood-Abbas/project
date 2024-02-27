@@ -90,6 +90,29 @@ router.post("/", async (req, res) => {
   }
   
 });
+// update patient
+router.patch("/:id", async (req, res) => {
+  try {
+    const id = req.params.id; 
+    const { employeeNo, password, ...updateFields } = req.body;
+
+    const updateUser = await Patient.findOneAndUpdate(
+      { id},
+      { ...updateFields },
+      {
+        new: true,
+      }
+    );
+    if (!updateUser) {
+      return res.status(404).send("Patient not updated");
+    }
+    res.status(201).send(updateUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // get all patientes
 router.get(`/`, async (req, res) => {
   try {
