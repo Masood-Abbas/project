@@ -42,8 +42,14 @@ router.post("/", async (req, res) => {
   const logoPath = path.join(__dirname, "../../public/images/logo.png");
   const logoBuffer= await readFileAsync(logoPath)
   const logoBase64= logoBuffer.toString("base64")
+ // stamp image
+ const stampPath = path.join(__dirname, '../../public/images/stamp.png');
+ const stampBuffer = await readFileAsync(stampPath);
+ const stampBase64 = stampBuffer.toString('base64');
+
   const patientData = {
     logo:`data:image/png;base64,${logoBase64}`,
+    stamp:`data:image/png;base64,${stampBase64}`,
     pdfName,
    email,
     name,

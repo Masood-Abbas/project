@@ -28,6 +28,7 @@
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
       }
       
       /* Style the table headers */
@@ -71,9 +72,14 @@
         }
       .stamp{
         display: flex;
-        align-items:center;
-        justify-content: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
         margin-top: 10px;
+      }
+      .stamp img{
+        height: 250px;
+        width: 250px;
       }
   </style>
 </head>
@@ -124,7 +130,7 @@
     <!-- Footer Section -->
     <footer>
       <div class="stamp">
-        Report Stamp: [Stamp Image]
+       Stamp: <img src="{{stamp}}" alt="Laboratory signature" id="logo-image" />
       </div>
     </footer>
   </body>
