@@ -1,5 +1,5 @@
 const express = require('express');
-const router = new express.Router();
+const router = express.Router();
 const puppeteer = require('puppeteer');
 const handlebars = require('handlebars');
 const path = require('path');
@@ -96,13 +96,11 @@ router.post('/', async (req, res) => {
     const html = compiledTemplate(patientData);
 
     // Launch a headless Chromium browser
-    const browser = await puppeteer.launch({ headless: 'true' });
+    const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
 
     // Set the content of the page to the generated HTML
     await page.setContent(html);
-    const imageSelector = '.logo-image'; 
-    await page.waitForSelector(imageSelector);
 
     const pdfFileName = `${pdfName}.pdf`;
 
@@ -116,11 +114,8 @@ router.post('/', async (req, res) => {
     // Close the browser
     await browser.close();
     console.log('PDF generated successfully!');
-    // Delete the Pdf
-    schedulePdfDeletion(pdfPath);
-
     // Send success response for PDF generation
-    res.status(200).json({message:'PDF generated successfully'});
+    res.status(200).json({ message: 'PDF generated successfully' });
   } catch (pdfError) {
     console.error('Error generating PDF:', pdfError);
 
@@ -128,35 +123,34 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Error generating PDF' });
   }
 
-  try {
-    // send mail to patient to pdf name
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASS,
-      },
-    });
 
-    // Email options
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: email,
-      subject: 'information',
-      text: `You can download the pdf our website your pdf name is ${pdfName}`,
-    };
+  // send mail to patient to pdf name
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
+    },
+  });
 
-    // send email
-    const emailInfo = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully!', emailInfo.response);
+  // Email options
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: email,
+    subject: "information",
+    text: `You can download the pdf our website your pdf name is ${pdfName}`
+  };
 
-    // Send success response for email
-    res.status(201).send('Email sent successfully');
-  } catch (emailError) {
-    console.error('Error sending email:', emailError);
-
-    // Send error response for email
-    res.status(404).send('Error occurred while sending email');
-  }
+  // send email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email: " + error);
+      res.status(404).send("Error occurred while sending email");
+    } else {
+      console.log("Email sent: " + info.response);
+      res.status(201).send("Email sent successfully");
+    }
+  });
 });
+
 module.exports = router;
