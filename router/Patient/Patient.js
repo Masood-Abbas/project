@@ -94,7 +94,7 @@ router.post("/", async (req, res) => {
 router.patch("/:id", async (req, res) => {
   try {
     const id = req.params.id; 
-    const { employeeNo, password, ...updateFields } = req.body;
+    const { firstName,lastName, ...updateFields } = req.body;
 
     const updateUser = await Patient.findOneAndUpdate(
       { id},

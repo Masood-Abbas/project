@@ -40,8 +40,6 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const titleId = req.params.id;
-
-    // Find the title by its ID and delete it
     const deletedTitle = await Title.findOneAndDelete({ id: titleId });
 
     if (!deletedTitle) {
@@ -59,8 +57,6 @@ router.patch("/:id", async (req, res) => {
   try {
     const titleId = req.params.id;
     const newName = req.body.name;
-
-    // Find the title by its ID and update the name
     const updatedTitle = await Title.findOneAndUpdate(
       { id: titleId },
       { name: newName },
