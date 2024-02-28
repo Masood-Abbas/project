@@ -65,16 +65,21 @@ router.post("/", async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: "Information",
-      text: `Employee No: ${employeeNo}
-            First Name: ${firstName}
-            Last Name: ${lastName}
-            Email: ${email}
-            Employee Type: ${employeeType}
-            Category: ${category}
-            Password: ${password}
-            Profile Image: ${profileImg}
-            Phone Number: ${phoneNumber} `,
+      subject: "Welcome to Digi_lab",
+      text: `Dear ${firstName} ${lastName},
+
+      We are delighted to welcome you as a new member of the Digi_lab team. Your dedication and expertise will undoubtedly contribute to our shared success.
+      Here are your employee details:
+      Employee No: ${employeeNo}
+      First Name: ${firstName}
+      Last Name: ${lastName}
+      Email: ${email}
+      Password: ${password} 
+      Phone Number: ${phoneNumber}
+      Feel free to reach out if you have any questions or require assistance in getting started. We look forward to working together and wish you a successful and fulfilling journey with Digi_lab.
+      
+      Best regards, 
+      Admin`,
             
     };
 
