@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
     });
 
     const result = await newPatient.save();
-    res.send("Reqested accept successfully");
+    res.json({message:"Reqested accept successfully"});
 
     // Send the email
 
@@ -106,7 +106,7 @@ router.patch("/:id", async (req, res) => {
     if (!updateUser) {
       return res.status(404).send("Patient not updated");
     }
-    res.status(201).send(updateUser);
+    res.status(201).json({message: 'Report Generated Successfully'});
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
