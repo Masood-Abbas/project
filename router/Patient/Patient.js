@@ -157,21 +157,5 @@ router.delete(`/:id`, async (req, res) => {
     console.log(error);
   }
 });
-router.get("/get/search", async (req, res) => {
-  const query = req.query.q;
-  try {
-    let results;
-    if (!query) {
-      results = await Patient.find({});
-    } else {
-      results = await Patient.find({
-        $or: [{ firstName: { $regex: new RegExp(query, "i") } }],
-      });
-    }
-    res.json(results);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+
 module.exports = router;
